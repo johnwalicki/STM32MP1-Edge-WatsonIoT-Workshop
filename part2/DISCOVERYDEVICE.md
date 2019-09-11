@@ -15,7 +15,7 @@ This Lab will show you how to register your ST Microelectronics STM32MP1 Discove
 
 Before you can connect a device to the Watson IoT Platform you need to define how the device will connect to the platform and also register the device to generate an access token for the device.  This will be used to verify the device identity.
 
-You need to decide how you want to group devices, by function, by hardware type, etc.  Each device registered on the platform must be registered against a device type.  There are no restrictions about how devices are grouped and the device types, for this workshop we will create a device type representing the ST Microelectronics Discovery Kit IoT Node devices.
+You need to decide how you want to group devices, by function, by hardware type, etc.  Each device registered on the platform must be registered against a device type.  There are no restrictions about how devices are grouped and the device types, for this workshop we will create a device type representing the ST Microelectronics Discovery Kit devices.
 
 ### Step 1 - Add a new device type for Discovery Kit device
 
@@ -31,16 +31,16 @@ You need to decide how you want to group devices, by function, by hardware type,
 - Press the **Next** button (5)
 ![Create DiscoveryKit Device](/screenshots/IoTP-DeviceType-Create.png)
 
-- Press the **Done** button (6)
+- Press the **Finish** button (6)
 ![Create DiscoveryKit Device](/screenshots/IoTP-DeviceType-Done.png)
 
-### Step 2 - Register a new DiscoveryKit device in the IoT Platform
+### Step 2 - Register a new STM32MP1 device in the IoT Platform
 
 You now have the opportunity to register a device.
 - Press **Register Devices** (7)
 ![Create DiscoveryKit Device](/screenshots/IoTP-DeviceRegister.png)
 
-- The DiscoveryKit device type should be pre-selected.  You now need to enter a unique device ID.  You can choose how you want to identify devices.  For the workshop, use a simple format, such as **STM32MP1-Edge001**. (8)
+- The STM32MP1 device type should be pre-selected.  You now need to enter a unique device ID.  You can choose how you want to identify devices.  For the workshop, use a simple format, such as **STM32MP1-Edge001**. (8)
 - Press **Next** button (9)
 ![Create DiscoveryKit Device](/screenshots/IoTP-DeviceName.png)
 
