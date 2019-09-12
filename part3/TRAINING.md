@@ -1,7 +1,5 @@
 *Quick links :*
-[Home](/README.md) - [Part 1](../part1/README.md) - [Part 2](../part2/README.md) - [Part 3](../part3/README.md) - [**Part 4**](../part4/README.md)
-***
-**Part 4** - [Watson Studio](STUDIO.md) - [**Training Data**](TRAINING.md) - [Notebooks](JUPYTER.md) - [ESP8266 model](MODEL.md) - [Summary](SUMMARY.md)
+[Home](/README.md) - [Watson Studio](STUDIO.md) - [**Training Data**](TRAINING.md) - [Notebooks](JUPYTER.md) - [STM32MP1 model](MODEL.md) - [Summary](SUMMARY.md)
 ***
 
 ## Lab Objectives
@@ -16,8 +14,8 @@ In this section we will create the training data needed to train a model.  You w
 
 To train the model we need to identify 2 different situations:
 
-- the DHT sensor is not being held
-- the DHT sensor is being held in a closed hand
+- the IKS01A2 sensor is not being held
+- the IKS01A2 sensor is covered by your finger
 
 It is important to ensure the training data is of good quality, so we are going to create a new database to hold the training database and carefully manage what data is added to the training database.
 
@@ -95,7 +93,5 @@ You can now start creating the training data again - the database is automatical
 
 Once you have your training data recorded you can move to the [next section](JUPYTER.md)
 ***
-**Part 4** - [Watson Studio](STUDIO.md) - [**Training Data**](TRAINING.md) - [Notebooks](JUPYTER.md) - [ESP8266 model](MODEL.md) - [Summary](SUMMARY.md)
+**Part 4** - [Watson Studio](STUDIO.md) - [**Training Data**](TRAINING.md) - [Notebooks](JUPYTER.md) - [STM32MP1 model](MODEL.md) - [Summary](SUMMARY.md)
 ***
-*Quick links :*
-[Home](/README.md) - [Part 1](../part1/README.md) - [Part 2](../part2/README.md) - [Part 3](../part3/README.md) - [**Part 4**](../part4/README.md)
