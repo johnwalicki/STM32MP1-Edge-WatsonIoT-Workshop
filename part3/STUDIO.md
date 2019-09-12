@@ -1,7 +1,7 @@
 *Quick links :*
 [Home](/README.md) - [Part 1](../part1/README.md) - [Part 2](../part2/README.md) - [Part 3](../part3/README.md) - [**Part 4**](../part4/README.md)
 ***
-**Part 4** - [**Watson Studio**](STUDIO.md) - [Training Data](TRAINING.md) - [Notebooks](JUPYTER.md) - [ESP8266 model](MODEL.md) - [Summary](SUMMARY.md)
+**Part 3** - [**Watson Studio**](STUDIO.md) - [Training Data](TRAINING.md) - [Notebooks](JUPYTER.md) - [ESP8266 model](MODEL.md) - [Summary](SUMMARY.md)
 ***
 
 # Watson Studio Set up and Configuration in IBM Cloud
@@ -26,7 +26,7 @@ Watson Studio needs a data store to enable it to work and it uses the Cloud Obje
 
 #### Create a Watson Studio service instance
 
-- Create a **Watson Studio** service instance from the [IBM Cloud Catalog](https://console.bluemix.net/catalog/?search=studio)
+- Create a **Watson Studio** service instance from the [IBM Cloud Catalog](https://cloud.ibm.com/catalog/?search=studio)
 - Search on **Studio** in the IBM Cloud Catalog
 
 ![Watson Studio Catalog screenshot](screenshots/WatsonStudio-Catalog.png)
@@ -51,27 +51,34 @@ Projects are your workspace to organize your resources, such as assets like data
 #### Create a New Project
 
 - Click on **Create a project**
-- Select the **Standard** tile and press the **Create Project** button
 
-![Watson Studio New project screenshot](screenshots/WatsonStudio-NewProject-Tiles.png)
+![Watson Studio Welcome screenshot](screenshots/WatsonStudio-Welcome.png)
+
+- Select the **Create an empty project** tile
+
+![Watson Studio New project screenshot](screenshots/WatsonStudio-CreateNewProject.png)
 
 - Give your Project a name : **IoT Sensor Analytics**
-- If you already have a Cloud Object Storage instance then it should be selected
-  
+- Click on **Add** to define a Cloud Object Storage instance
+
 ![Watson Studio New project screenshot](screenshots/WatsonStudio-NewProject.png)
 
-- if you don't have a Cloud Object Storage instance, then press the **Add** button to create one.  Ensure the Lite plan is selected then select **Create** then **Confirm** to create the instance.  Press the **Refresh** button to get the Cloud Storage instance to show up as the selected storage for your new Watson Studio project.
+#### Create Cloud Object Storage
+- You will store training data in a Cloud Object Storage bucket
+- Select the **Lite** plan and note the features
+- Scroll to the bottom and click on the **Create** button and then **Confirm** to create a Cloud Object Storage instance.
 
-![Watson Studio New project screenshot](screenshots/WatsonStudio-AddStorage.png)
+![Cloud Object Storage Service screenshot](screenshots/CloudObjectStorage-Service.png)
 
-- Press the **Create** button to create the New Watson Studio project
+- Click on **Refresh** on the New Project tab.
+- Click on **Create** to create the new project.
 
 ### Step 3 - Create a Notebook
 
 - From the top menu, select **Add to project**, and then **Notebook**
 - Select **Blank**
 - Give the notebook a name : **IoT Sensor Analytics**
-- Scroll down to the **Select runtime** dropdown and choose **Default Spark Python 3.5 XS (Driver with 1 vCPU and 4 GB RAM, 2 executors with 1 vCPU and 4 GB RAM each** runtime
+- Scroll down to the **Select runtime** dropdown and choose **Default Spark Python 3.6 XS (Driver with 1 vCPU and 4 GB RAM, 2 executors with 1 vCPU and 4 GB RAM each** runtime
 
 ![Watson Studio New notebook screenshot](screenshots/WatsonStudio-NewNotebook.png)
 
@@ -82,7 +89,5 @@ Projects are your workspace to organize your resources, such as assets like data
 You are now ready to create the training data we will use, so proceed to the next [Training Data section](TRAINING.md).
 
 ***
-**Part 4** - [**Watson Studio**](STUDIO.md) - [Training Data](TRAINING.md) - [Notebooks](JUPYTER.md) - [ESP8266 model](MODEL.md) - [Summary](SUMMARY.md)
+**Part 3** - [**Watson Studio**](STUDIO.md) - [Training Data](TRAINING.md) - [Notebooks](JUPYTER.md) - [ESP8266 model](MODEL.md) - [Summary](SUMMARY.md)
 ***
-*Quick links :*
-[Home](/README.md) - [Part 1](../part1/README.md) - [Part 2](../part2/README.md) - [Part 3](../part3/README.md) - [**Part 4**](../part4/README.md)

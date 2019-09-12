@@ -1,7 +1,7 @@
 # STM32MP1-Edge-WatsonIoT-Workshop
 STMicroelectronics STM32MP1 Discovery Kit and IBM Edge / Watson Hands-On Workshop
 
-## STM32MP1 Discovery Kit and IBM Edge / Watson Hands-On Workshop:
+## STM32MP1 Discovery Kit and IBM Edge / Watson Hands-On Workshop
 
 Learn how to connect your next IoT Edge design to the Cloud using IBM Watson IoT Platform and the STM32MP1 Discovery Kit.  The STM32MP1 features a Cortex A7 multiprocessor and a ultra-low-power STM32L4 Cortex® -M4 MCU and wireless connectivity. In this workshop we will attach an IKS01A2 sensor expansion board to showcase cloud connectivity features.  By running OpenSTLinux on the A7 processor, we will run Node.js and Node-RED on the Edge device.  The program will send sensor data to the IBM Watson IoT Platform, where Node-RED running in a Node web application in IBM Cloud will display a Dashboard.  The data will be saved to a Cloudant time series database.  We will then use Watson Studio, IBM's data science portal, to create a machine learning model by ingesting the temperature / humidity sensor data. The model parameters will be sent from IBM Cloud to the STM32MP1 edge device.  Node-RED running local on the device will then score the incoming data and detect when you place your finger on the sensor.
 
@@ -11,16 +11,16 @@ This hands-on workshop will show you how to integrate sensors, wireless connecti
 
 The hands-on training is a working session – please bring your laptop. Note: Administrator rights is needed for software and driver installation. ST will provide the required STM32 development boards and software. SPACE IS LIMITED FOR THIS SESSION – FIRST COME, FIRST SEATED.
 
-**The kits must be returned after the session.**
+**The STM32MP1 Discovery kits must be returned after the session.**
 
 ## Learning Objectives:
 In this workshop, you will learn how to:
 
 ### Part 1
 
-- Learn about the [STM32MP1 Discovery Kit](https://www.st.com/en/evaluation-tools/b-l475e-iot01a.html) development board.
-- Power up OpenSTLinux on the STM32MP1, detect the WiFi IP address and connect to the device via ssh.
-- Run the Environmental Sensor programs to observe temperature, humidity, acceleration and gyroscope information.
+- Learn about the [STM32MP1 Discovery Kit](https://www.st.com/en/evaluation-tools/b-l475e-iot01a.html) development board
+- Power up OpenSTLinux on the STM32MP1, detect the WiFi IP address and connect to the device via ssh
+- Run the Environmental Sensor programs to observe temperature, humidity, acceleration and gyroscope information
 - Connect your browser to Node-RED running on the STM32MP1 OpenSTLinux
 - Send STM32MP1 Discovery Kit data to [Watson IoT Quickstart](https://quickstart.internetofthings.ibmcloud.com/#/)
 
@@ -58,8 +58,8 @@ In this workshop, you will learn how to:
 ## Prerequisites
 This tutorial can be completed using an IBM Cloud Lite account.
 
-* Create an [IBM Cloud account](https://ibm.biz/BdzcZt)
-* Log into [IBM Cloud](https://console.bluemix.net/login)
+* Create an [IBM Cloud account](https://ibm.biz/BdzgST)
+* Log into [IBM Cloud](https://cloud.ibm.com/login)
 
 ## Part 1
 
@@ -71,13 +71,13 @@ This section shows you how to unpack the STM32MP1 Discovery Kit development boar
 
 ### Section 2 - Power up OpenSTLinux and connect to the STM32MP1
 
-This section shows you how to power up OpenSTLinux on the STM32MP1, detect the WiFi IP address and connect to the device via ssh.
+This section shows you how to power up OpenSTLinux on the STM32MP1, detect the WiFi IP address and connect to the device via ssh
 
 - Instructions : [Connect to the STM32MP1](part1/POWERUP.md)
 
 ### Section 3 - Run the Environmental Sensor programs
 
-This section shows you how to run the Environmental Sensor programs to observe temperature, humidity, acceleration and gyroscope information.
+This section shows you how to run the Environmental Sensor programs to observe temperature, humidity, acceleration and gyroscope information
 
 - Instructions : [Environmental Sensor Data](part1/SENSORDATA.md)
 

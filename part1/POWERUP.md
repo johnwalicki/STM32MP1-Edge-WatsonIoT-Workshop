@@ -16,7 +16,7 @@
 
 - Web Browser
 
-# OpenSTLinux Open Embedded
+# OpenSTLinux Open Embedded Linux
 
 As a mainlined open-source Linux distribution, [OpenSTLinux Distribution](https://www.st.com/en/embedded-software/stm32-mpu-openstlinux-distribution.html) is a key element of the STM32 Embedded Software solution for STM32 multi-core microprocessors (MPU) embedding a single or dual Arm® Cortex®-A7 core.
 
@@ -51,7 +51,7 @@ ssid="STDEVCON19_CLD_WORKSHOP"
 psk="Connect_STM32"
 ```
 
-## **ssh** to your STM32MP1 Discovery Kits
+## **ssh** to your STM32MP1 Discovery Kit
 
 - Open a terminal console window on your laptop and run the **ssh** command or Windows terminal program.
 ```sh

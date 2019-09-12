@@ -15,8 +15,8 @@ After completing this tutorial you will be able to:
 ## Prerequisites
 This tutorial can be completed using an IBM Cloud Lite account.
 
-* Create an [IBM Cloud account](https://ibm.biz/BdYMsj)
-* Log into [IBM Cloud](https://console.bluemix.net/login)
+* Create an [IBM Cloud account](https://ibm.biz/BdzgST)
+* Log into [IBM Cloud](https://cloud.ibm.com/login)
 
 ## Estimated time
 
@@ -26,8 +26,9 @@ You can complete this task in no more than 20 minutes.
 
 Follow these steps to create a Watson IoT Platform Starter application in IBM Cloud.
 
-* Create an [IBM Cloud account](https://console.bluemix.net/registration) and log into [IBM Cloud](https://console.bluemix.net/login)
-* Click on the [Catalog](https://console.bluemix.net/catalog/?search=internet%20of%20things%20platform%20starter) (1) and search for **internet of things** (2)
+* Create an [IBM Cloud account](https://ibm.biz/BdzgST)
+* Log into [IBM Cloud](https://cloud.ibm.com/login)
+* Click on the [Catalog](https://cloud.ibm.com/catalog?category=starterkits) (1) and search for **internet of things** (2)
 * Under	**Starter Kits** (3) click on **Internet of Things Platform Starter** (4)
 ![Catalog entry IoTP Starter Kit](/screenshots/Catalog-StarterKit-IoTP.png)
 * Enter a **unique name** for your application (5). For example, *stmicro-discoverykit-yourname*. This name will be part of the **application URL** (6)
