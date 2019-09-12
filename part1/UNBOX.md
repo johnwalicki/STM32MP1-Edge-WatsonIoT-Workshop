@@ -1,9 +1,9 @@
 *Quick links :*
-[Home](/README.md) - [Unbox your STM32MP1 Discovery Kit](UNBOX.md) - [PowerUp](POWERUP.md) - [Connect to Node-RED](EDGE-NODERED.md) - [Send Data to QuickStart](EDGE-QUICKSTART.md)
+[Home](/README.md) - [**Unbox your STM32MP1 Discovery Kit**](UNBOX.md) - [PowerUp](POWERUP.md) - [Sensor Data](SENSORDATA.md) - [Connect to Node-RED](EDGE-NODERED.md) - [Send Data to QuickStart](EDGE-QUICKSTART.md)
 ***
 ## Welcome to the STM32MP157C-DK2 Discovery Kit
 
-The [STM32MP157C-DK2 Discovery kit](https://www.st.com/content/st_com/en/products/evaluation-tools/product-evaluation-tools/mcu-mpu-eval-tools/stm32-mcu-mpu-eval-tools/stm32-discovery-kits/stm32mp157c-dk2.html) leverages the capabilities of STM32MP1 Series microprocessors to allow users easily develop applications using STM32 MPU OpenSTLinux Distribution software for the main processor and STM32CubeMP1 software for the co-processor.
+The [STM32MP157C-DK2 Discovery kit](https://www.st.com/content/st_com/en/products/evaluation-tools/product-evaluation-tools/mcu-mpu-eval-tools/stm32-mcu-mpu-eval-tools/stm32-discovery-kits/stm32mp157c-dk2.html) leverages the capabilities of STM32MP1 Series microprocessors to allow users to easily develop applications using STM32 MPU OpenSTLinux Distribution software for the main processor and STM32CubeMP1 software for the co-processor.
 
 
 The Discovery Kit includes LEDs, push-buttons, one Ethernet 1-Gbps connector, one USB Type-CTM OTG connector, four USB Type-A Host connectors, one HDMI® transceiver, one stereo headset jack with analog microphone, and one microSDTM connector.
@@ -52,3 +52,9 @@ Underneath the STM32MP1, line up the pins and plug in the [X-NUCLEO-IKS01A2 moti
 - Connect the USB-C to the STM32MP157C-DK2 (2)
 
 ![STM32MP1 cabling](../screenshots/STM32MP157C-cables.png)
+
+Proceed to the [PowerUp](POWERUP.md) page.
+
+*Quick links :*
+[Home](/README.md) - [**Unbox your STM32MP1 Discovery Kit**](UNBOX.md) - [PowerUp](POWERUP.md) - [Sensor Data](SENSORDATA.md) - [Connect to Node-RED](EDGE-NODERED.md) - [Send Data to QuickStart](EDGE-QUICKSTART.md)
+***
