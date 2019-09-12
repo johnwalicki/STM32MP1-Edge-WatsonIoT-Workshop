@@ -21,8 +21,8 @@ In just a few nodes, Node-RED can receive the data that was transmitted from the
 - From the Input category of the left Node-RED palette, select an **ibmiot node** and drag it onto your Node-RED flow (1).
 - Double-click on the IBM IoT node. An **Edit ibmiot in node** sidebar will open.
 - Configure the Authentication dropdown to **Bluemix Service** (2).
-- Uncheck All and set the Device Type to **DiscoveryKit** (3).
-- Check All Device Ids (4)
+- Uncheck All and set the Device Type to **STM32MP1** (3).
+- Check **All** Device Ids (4)
 - Uncheck All and set the Event to **status** (5).
 - Click on the red **Done** button.
  ![Receive DiscoveryKit Data](/screenshots/DiscoveryKit-ReceiveData-IoTnode.png)
@@ -32,7 +32,7 @@ In just a few nodes, Node-RED can receive the data that was transmitted from the
 - Recall that the environmental sensor data was transmitted in a JSON object
 
  ```
- { "d": {"temperature":T,"humidity":H,"pressure":B,"proximity":D,"acc_x":X,"acc_y":Y,"acc_z":Z,"gyr_x":X,"gyr_y":Y,"gyr_z":Z,"mag_x":X,"mag_y":Y,"mag_z":Z} }
+ { "d": {"temperature":T,"humidity":H,"acc_x":X,"acc_y":Y,"acc_z":Z,"gyr_x":X,"gyr_y":Y,"gyr_z":Z,"mag_x":X,"mag_y":Y,"mag_z":Z} }
  ```
 
 - Node-RED passes data from node to node in a *msg.payload* JSON object.
@@ -64,7 +64,7 @@ In just a few nodes, Node-RED can receive the data that was transmitted from the
 
 - Wire the Node-RED nodes together by click / dragging your mouse from nodelet to nodelet as show in the screenshot.
 - Click on the red **Deploy** button in the upper right corner.
-- Observe the DiscoveryKit IoT Node sensor data in the **debug** tab of the Node-RED right sidebar.  You can expand the twisties to expose the JSON object information. Hover over a debug message in the right sidebar and the node that generated the message will be outlined in orange.
+- Observe the DiscoveryKit sensor data in the **debug** tab of the Node-RED right sidebar.  You can expand the twisties to expose the JSON object information. Hover over a debug message in the right sidebar and the node that generated the message will be outlined in orange.
   ![Receive DiscoveryKit Data](/screenshots/DiscoveryKit-ReceiveData-Deploy.png)
 
 **Congratulations** - Your Node-RED flow is receiving sensor data from the Discovery Kit board.
