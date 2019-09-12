@@ -107,43 +107,47 @@ This section shows you how to send STM32MP1 Discovery Kit data to [Watson IoT Qu
 
 - Instructions : [Node-RED Set up and Configuration in IBM Cloud](part2/NODERED.md)
 
-### Section 9 - Receive Discovery Kit Environmental Sensor Data in Node-RED
+### Section 9 - Send Sensor Data from Node-RED Edge to Node-RED Cloud
+
+- Instructions : [Send Sensor Data from the Edge to IBM Cloud](part2/SENDEDGE.md)
+
+### Section 10 - Receive Discovery Kit Environmental Sensor Data in Node-RED
 
 - Instructions : [Receive Discovery Kit Environmental Sensor Data in Node-RED](part2/DISCOVERYIOTDATA.md)
 
-### Section 10 - Node-RED Dashboard Charts - Plot Environmental Sensor Data
+### Section 11 - Node-RED Dashboard Charts - Plot Environmental Sensor Data
 
 - Instructions : [Node-RED Dashboard Charts - Plot Environmental Sensor Data](part2/DASHBOARD.md)
 
-### Section 11 - Store Data in Cloud Storage for Historical Data Analytics
+### Section 12 - Store Data in Cloud Storage for Historical Data Analytics
 
 - Instructions : [Store Data in Cloud Storage for Historical Data Analytics](part2/CLOUDANT.md)
 
-### Section 12 - Node-RED Charts of Historical Sensor Data
+### Section 13 - Node-RED Charts of Historical Sensor Data
 
 - Instructions : [Node-RED Charts of Historical Sensor Data](part2/HISTORY.md)
 
 ## Part 3
 
-### Section 13 - Watson Studio Set up and Configuration in IBM Cloud
+### Section 14 - Watson Studio Set up and Configuration in IBM Cloud
 
 This section shows you how to deploy the Watson Studio service and how to create your first Jupyter Notebook.
 
 - Instructions : [Watson Studio Set up and Configuration in IBM Cloud](part3/STUDIO.md)
 
-### Section 14 - Create training data
+### Section 15 - Create training data
 
 This section shows you how to create the training data needed to create a model so you will be able to determine what is happening from the sensor data.
 
 - practical [Training Data](part3/TRAINING.md)
 
-### Section 15 - Jupyter Notebook Analytics - Create model
+### Section 16 - Jupyter Notebook Analytics - Create model
 
 This section shows you how to use the training data to create a model that can then be used to classify actions.
 
 - practical [Jupyter Notebook - STM32MP1](part3/JUPYTER.md)
 
-### Section 16 - Send and Run the model on the STM32MP1 Edge device
+### Section 17 - Send and Run the model on the STM32MP1 Edge device
 
 This section takes the output from the Jupyter Notebook and implements the trained model on the STM32MP1 Edge device.
 
