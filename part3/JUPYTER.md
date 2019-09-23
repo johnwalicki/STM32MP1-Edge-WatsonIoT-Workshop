@@ -79,7 +79,7 @@ df=readDataFrameFromCloudant('training')
 
 Run the cell by pressing the run button in the toolbar.  You should see the data from the database.  You can validate that you have the correct data format by checking you have the **class**, **humidity**, **index** and **temperature** columns in the loaded data: ![Load data in to notebook](screenshots/WatsonStudio-cell2.png)
 
-If you want to clear out the data created by previously run steps then you can use the kernel menu option to clear out and restart the notebook, or clear out and run all steps: ![restarting a notebook](screenshots/WatsonStudio-kernel-options.png)
+If you want to clear out the data created by previously run steps then you can use the **Kernel** menu option to clear out and restart the notebook, or clear out and run all steps: ![restarting a notebook](screenshots/WatsonStudio-kernel-options.png)
 
 If you clear output then you can select the first cell and press run, which will run the cell then move to the next cell in the notebook.  Keep pressing run to run each cell in turn, ensure you wait for each cell to complete (At the left side of the cell the indicator **[*]** turns to **[n]**, where n is a number) before running the next step.
 
