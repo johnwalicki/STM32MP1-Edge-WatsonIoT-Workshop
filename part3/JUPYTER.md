@@ -1,7 +1,5 @@
 *Quick links :*
-[Home](/README.md) - [Part 1](../part1/README.md) - [Part 2](../part2/README.md) - [Part 3](../part3/README.md) - [**Part 4**](../part4/README.md)
-***
-**Part 4** - [Watson Studio](STUDIO.md) - [Training Data](TRAINING.md) - [**Notebooks**](JUPYTER.md) - [ESP8266 model](MODEL.md) - [Summary](SUMMARY.md)
+**Part 3** - [Home](/README.md) - [Watson Studio](STUDIO.md) - [Training Data](TRAINING.md) - [**Notebooks**](JUPYTER.md) - [STM32MP1 model](MODEL.md) - [Summary](SUMMARY.md)
 ***
 
 # Run a Jupyter Notebook in Watson Studio
@@ -23,7 +21,7 @@ The steps below will build up the Jupyter notebook, there is a solution notebook
 
 ## Step 1 - Cloudant Credentials
 
-Before we can read the ESP8266 IoT temperature and humidity data into a Jupyter notebook we need to create credentials for the Cloudant database where the training data is stored.
+Before we can read the STM32MP1 IoT temperature and humidity data into a Jupyter notebook, we need to create credentials for the Cloudant database where the training data is stored.
 
 - Open a new browser tab.
 - Return to the [IBM Cloud dashboard](https://cloud.ibm.com) and your IoT Starter application. **Click** on the cloudantNoSQLDB service connection (1). ![Cloudant NoSQL Service Connection](../part3/screenshots/CloudantNoSQLServiceConnection.png)
@@ -39,35 +37,41 @@ Before we can read the ESP8266 IoT temperature and humidity data into a Jupyter 
 
 ### Step 2 - Loading Cloudant data into the Jupyter notebook
 
-When using the lite account on the IBM Cloud there are some restrictions on services.  One restriction is a limit on the number of requests that can be run in a second (5 database actions per second).  To overcome this we need to ensure that data is extracted from Cloudant at a suitable rate, not to hit this limit.  The code below uses the **jsonstore.rdd.partitions** configuration option to ensure this limit is not exceeded.
+When using the lite account on the IBM Cloud there are some restrictions on services.  One restriction is a limit on the number of requests that can be run in a second (5 database actions per second).  To overcome this we need to ensure that data is extracted from Cloudant at a suitable rate, not to hit this limit.  The code below uses the **Apache Bahir** package to ensure this limit is not exceeded.
 
 - Return to the Watson Studio browser tab and open the **IoT Sensor Analytics** notebook. ![Watson Studio Assets](screenshots/WatsonStudio-Notebook-ESP8266.png)
 
 - Make certain you are in **Edit** mode by clicking on the Pencil icon. ![Watson Studio Edit mode](screenshots/WatsonStudio-Notebook-edit.png)
-- Copy the following code into the first cell in the notebook and update the credentials with the values from your cloudant database credentials (created in **step 1**).  The values are from the host, username and password properties in the credentials:
+- Copy the following code into the first cell in the notebook.
+```python
+import pixiedust
+pixiedust.installPackage("org.apache.bahir:spark-sql-cloudant_2.11:0")
+```
+- In the second and third cells, we will initialize the Spark session.
+```python
+from pyspark.sql import SparkSession
+```
+and
+```python
+spark = SparkSession.builder.getOrCreate()
+```
+- Update the credentials with the values from your cloudant database credentials (created in **step 1**).  The values are from the host, username and password properties in the credentials:
 
 ```python
 ### TODO Please provide your Cloudant credentials in this cell
-
-#Please don't modify this function
 def readDataFrameFromCloudant(database):
-    cloudantdata=spark.read.load(database, "com.cloudant.spark")
-    cloudantdata.createOrReplaceTempView("washing")
-    spark.sql("SELECT * from washing").show()
-    return cloudantdata
 
-spark = SparkSession\
-    .builder\
-    .appName("Cloudant Spark SQL Example in Python using temp tables")\
-    .config("cloudant.host",'XXXX')\
-    .config("cloudant.username", 'XXXX')\
-    .config("cloudant.password",'XXXX')\
-    .config("jsonstore.rdd.partitions", 1)\
-    .getOrCreate()
+  cloudantdata = spark.read.format("org.apache.bahir.cloudant")\
+    .option("cloudant.host",'XXXX-bluemix.cloudant.com')\
+    .option("cloudant.username", 'XXXX-bluemix')\
+    .option("cloudant.password",'XXXX')\
+    .load(database)
+
+  return cloudantdata
 ```
 
-- Press the **Run** button in the toolbar to run the cell ![Run first cell](screenshots/WatsonStudio-cell1.png)
-- Move the focus to the next cell and copy in the following python, which calls the function defined in the first cell to load the data from Cloudant training database *(this assumes you used the database name **training** when capturing training data, if not, modify the database name)*:
+- Press the **Run** button in the toolbar to run the cells ![Run first cell](screenshots/WatsonStudio-cell1.png)
+- Move the focus to the next cell and copy in the following python, which calls the function defined in the cell to load the data from Cloudant training database *(this assumes you used the database name **training** when capturing training data, if not, modify the database name)*:
 
 ```python
 df=readDataFrameFromCloudant('training')
@@ -90,11 +94,22 @@ Within the notebook you are able to manipulate the data. In this section we will
 df.createOrReplaceTempView('df')
 ```
 
+- The temperature and humidity data is imported as strings, so we will convert the columns to doubles.
+```python
+from pyspark.sql.functions import translate, col
+
+df_cleaned = df \
+    .withColumn("temp", df.temp.cast('double')) \
+    .withColumn("humidity", df.humidity.cast('double')) \
+
+df_cleaned.createOrReplaceTempView('df_cleaned')
+df_cleaned.select('temp', 'humidity').distinct().show()
+```
 - Now we will create a new data frame for each training class.  In the next cell enter then run the following:
 
 ```python
-df_class_0 = spark.sql('select time, temp, humidity, class from df where class = 0')
-df_class_1 = spark.sql('select time, temp, humidity, class from df where class = 1')
+df_class_0 = spark.sql('select time, temp, humidity, class from df_cleaned where class = 0')
+df_class_1 = spark.sql('select time, temp, humidity, class from df_cleaned where class = 1')
 df_class_0.createOrReplaceTempView('df_class_0')
 df_class_1.createOrReplaceTempView('df_class_1')
 ```
@@ -111,13 +126,13 @@ df_class_0.select('temp', 'humidity').distinct().show()
 - You can verify the database schema:
 
 ```python
-df.printSchema()
+df_cleaned.printSchema()
 ```
 
 - You can verify the number of records available for each training class and if necessary correct any skew in the number of records available for each class:
 
 ```python
-spark.sql('select class, count(class) from df group by class').show()
+spark.sql('select class, count(class) from df_cleaned group by class').show()
 ```
 
 If your training data had double the number of entries for class 0 as class 1 then you can create an adjusted data frame to use for training using the following code : ```df_skew_fixed = df_class_0.sample(False, 0.5).union(df_class_1)```, which selects 50% of the records for class 0 and joins them with the records for class 1, so now both classes will have a similar number of records.  However, this should not be necessary as we ensured we captured a similar number of records for each class when training.
@@ -162,11 +177,11 @@ vectorAssembler = VectorAssembler(inputCols=["humidity","temp"],
                                   outputCol="features")
 lr = LogisticRegression(maxIter=1000).setLabelCol("class")
 pipeline = Pipeline(stages=[vectorAssembler, lr ])
-model = pipeline.fit(df)
-result = model.transform(df)
+model = pipeline.fit(df_cleaned)
+result = model.transform(df_cleaned)
 ```
 
-- Once the model is trained we need to extract the model parameters (coefficients and the intercept values in the case of logistic regression), so we can implement the model on the ESP8266.  You will need these values for the next part of the workshop, so make a note of them now:
+- Once the model is trained we need to extract the model parameters (coefficients and the intercept values in the case of logistic regression), so we can implement the model on the STM32MP1.  You will need these values for the next part of the workshop, so make a note of them now:
 
 ```python
 model.stages[1].coefficients
@@ -192,9 +207,15 @@ binEval.evaluate(result)
 
 ```python
 # test the model
-#re-read data from cloudant
+# re-read data from cloudant
 new_df = readDataFrameFromCloudant('training')
-result = model.transform(new_df)
+new_df_cleaned = new_df \
+    .withColumn("temp", new_df.temp.cast('double')) \
+    .withColumn("humidity", new_df.humidity.cast('double')) \
+
+new_df_cleaned.createOrReplaceTempView('df_cleaned')
+
+result = model.transform(new_df_cleaned)
 result.createOrReplaceTempView('result')
 spark.sql("select humidity, temp, class, prediction from result").show(50)
 ```
@@ -211,13 +232,11 @@ spark.sql("select humidity, temp, prediction from result").show(50)
 
 ## Sample solution
 
-There is a sample solution for this part provided in the [notebooks](notebooks) folder.  If you have an issue and want to see the solution then within the IoT Sensor Analytics project select to add a new notebook.  Select to create a notebook from file and give the notebook a name - here **IoT Sensor Analytics - solution** has been used.  This assumes you have the file locally on your machine.  Select choose file and locate the **IoT Sensor Analytics.ipynb** file.  Finally ensure you have the Default Spark Python 3.5 XS runtime selected then press **Create Notebook**
+There is a sample solution for this part provided in the [notebooks](notebooks) folder.  If you have an issue and want to see the solution then within the IoT Sensor Analytics project select to add a new notebook.  Select to create a notebook from file and give the notebook a name - here **IoT Sensor Analytics - solution** has been used.  This assumes you have the file locally on your machine.  Select choose file and locate the **IoT Sensor Analytics.ipynb** file.  Finally ensure you have the Default Spark Python 3.6 XS runtime selected then press **Create Notebook**
   ![Import solution](screenshots/WatsonStudio-import-solution.png)
 
-Alternatively, you can select to import from URL and set the URL to : [https://raw.githubusercontent.com/binnes/esp8266Workshop/master/en/part4/notebooks/IoT%20Sensor%20Analytics.ipynb](https://raw.githubusercontent.com/binnes/esp8266Workshop/master/en/part4/notebooks/IoT%20Sensor%20Analytics.ipynb)
+Alternatively, you can select to import from URL and set the URL to : [https://raw.githubusercontent.com/johnwalicki/STM32MP1-Edge-WatsonIoT-Workshop/master/part3/notebooks/IoT%20Sensor%20Analytics.ipynb](https://raw.githubusercontent.com/johnwalicki/STM32MP1-Edge-WatsonIoT-Workshop/master/part3/notebooks/IoT%20Sensor%20Analytics.ipynb)
 
 ***
-**Part 4** - [Watson Studio](STUDIO.md) - [Training Data](TRAINING.md) - [**Notebooks**](JUPYTER.md) - [ESP8266 model](MODEL.md) - [Summary](SUMMARY.md)
+**Part 3** - [Watson Studio](STUDIO.md) - [Training Data](TRAINING.md) - [**Notebooks**](JUPYTER.md) - [STM32MP1 model](MODEL.md) - [Summary](SUMMARY.md)
 ***
-*Quick links :*
-[Home](/README.md) - [Part 1](../part1/README.md) - [Part 2](../part2/README.md) - [Part 3](../part3/README.md) - [**Part 4**](../part4/README.md)
