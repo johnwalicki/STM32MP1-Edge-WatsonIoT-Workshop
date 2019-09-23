@@ -21,10 +21,10 @@ It is important to ensure the training data is of good quality, so we are going 
 
 The database we need to create needs to have the following contents:
 
-- index.  This is a unique index for each record.  We can use a timestamp for this field
-- class.  This is an indication of which training class this data point represents.  0 for not held and 1 for held
-- temperature.  The temperature value
-- humidity.  The humidity value
+- index : This is a unique index for each record.  We can use a timestamp for this field
+- class : This is an indication of which training class this data point represents.  0 for not held and 1 for held
+- temperature : The temperature value
+- humidity : The humidity value
 
 To get the data into the database we will create a Node-RED flow, but will only connect up the database when we want data to be recorded.
 
@@ -40,17 +40,17 @@ To create the flow, open up the Node-RED editor running on the IBM Cloud (as use
 2. Connect the **ibmiot** node to the **change** node and then the **change** node to the **debug** node.  DO NOT connect the **cloudant out** node yet.
 3. Configure the **ibmiot** node to use the cloud service and listen to all JSON data from all devices as shown: ![nodered ibmiot node config](screenshots/nr-ibmiot-config.png)
 4. Configure the **change** node to have 2 set rules.  The first rule reformats the data received from the IoT platform, to flatten it and add a timestamp.  The second rule adds the class property and initially sets it to class 0:
-   - set msg.payload to JSONata expression ```msg.payload.{"time" : $millis(),"temp" : d.temp, "humidity" : d.humidity}```
+   - set msg.payload to JSONata expression ```msg.payload.{"time" : $millis(),"temp" : d.temperature, "humidity" : d.humidity}```
    - set msg.payload.class to number 0  
    as shown : ![nodered change node config](screenshots/nr-change-config.png)
 5. Configure the **cloudant out** node to use the cloud service and set the database name to training and ensure the operation is set to insert and to only store msg.payload object as shown: ![nodered cloudant out node config](screenshots/nr-cloudant-config.png)
 
 You should have a flow that looks like this: ![nodered flow](screenshots/nr-flow.png)
 
-If your flow is not working then you can import the sample flow, which is also available in the [flows](flows) folder in part4 of the repo :
+If your flow is not working then you can import the sample flow, which is also available in the [flows](flows) folder in part3 of the repo :
 
 ```JSON
-[{"id":"f46b4c67.73cb2","type":"ibmiot in","z":"deb0d57.1c46528","authentication":"boundService","apiKey":"","inputType":"evt","logicalInterface":"","ruleId":"","deviceId":"","applicationId":"","deviceType":"+","eventType":"+","commandType":"","format":"json","name":"IBM IoT","service":"registered","allDevices":true,"allApplications":"","allDeviceTypes":true,"allLogicalInterfaces":"","allEvents":true,"allCommands":"","allFormats":"","qos":0,"x":130,"y":100,"wires":[["e09fb3f3.79f538"]]},{"id":"e09fb3f3.79f538","type":"change","z":"deb0d57.1c46528","name":"","rules":[{"t":"set","p":"payload","pt":"msg","to":"msg.payload.{\"time\" : $millis(), \"temp\" : d.temp, \"humidity\" : d.humidity} ","tot":"jsonata"},{"t":"set","p":"payload.class","pt":"msg","to":"0","tot":"num"}],"action":"","property":"","from":"","to":"","reg":false,"x":280,"y":100,"wires":[["84be0f97.8f672"]]},{"id":"84be0f97.8f672","type":"debug","z":"deb0d57.1c46528","name":"","active":true,"tosidebar":true,"console":false,"tostatus":false,"complete":"false","x":450,"y":140,"wires":[]},{"id":"5a8d3b21.87bb3c","type":"cloudant out","z":"deb0d57.1c46528","name":"","cloudant":"","database":"training","service":"bi-ESP8266WorkshopCourse-cloudantNoSQLDB","payonly":false,"operation":"insert","x":460,"y":100,"wires":[]}]
+[{"id":"e0335f0b.88fb","type":"ibmiot in","z":"14c239b5.b8254e","authentication":"boundService","apiKey":"","inputType":"evt","logicalInterface":"","ruleId":"","deviceId":"STM32MP1-Edge001","applicationId":"","deviceType":"STM32MP1","eventType":"+","commandType":"","format":"json","name":"IBM IoT","service":"registered","allDevices":false,"allApplications":"","allDeviceTypes":false,"allLogicalInterfaces":"","allEvents":true,"allCommands":"","allFormats":"","qos":0,"x":90,"y":120,"wires":[["a4397b6e.9bf3"]]},{"id":"a4397b6e.9bf3","type":"change","z":"14c239b5.b8254e","name":"Training","rules":[{"t":"set","p":"payload","pt":"msg","to":"msg.payload.{\"time\" : $millis(), \"temp\" : d.temperature, \"humidity\" : d.humidity} ","tot":"jsonata"},{"t":"set","p":"payload.class","pt":"msg","to":"0","tot":"num"}],"action":"","property":"","from":"","to":"","reg":false,"x":260,"y":120,"wires":[["6e48cbde.2e7504"]]},{"id":"6e48cbde.2e7504","type":"debug","z":"14c239b5.b8254e","name":"","active":true,"tosidebar":true,"console":false,"tostatus":false,"complete":"false","x":450,"y":140,"wires":[]},{"id":"1538ce33.2ae0e2","type":"cloudant out","z":"14c239b5.b8254e","name":"","cloudant":"","database":"training","service":"","payonly":true,"operation":"insert","x":440,"y":100,"wires":[]}]
 ```
 
 This flow creates the following output, which we will write to the database:
@@ -68,13 +68,13 @@ This flow creates the following output, which we will write to the database:
 
 To create the training data you may want to use the interval dashboard to set the interval to something like 5 seconds, to reduce the time needed to gather the required data.  We are aiming to have a similar number of data points for each class in the training data.
 
-1. Ensure the ESP8266 is working and you can see the debug output as shown above.
+1. Ensure the STM32MP1 is working and you can see the debug output as shown above.
 2. As we want to record class 0 data, leave the DHT sensor alone and wait 30 seconds to ensure the data is stable.  Then connect up the **cloudant out** node and deploy the flow: ![flow collecting data](screenshots/nr-flow-collecting.png)
 3. Wait until about 20-30 records have been written then delete the connection to the **cloudant out** node and deploy the flow to stop any more records being written: ![nodered flow](screenshots/nr-flow-not-collecting.png)
 4. Edit the **change** node configuration to set the class to 1 : ![change class 1](screenshots/nr-change-class-1.png)
-5. Hold the DHT sensor in your hand, ensuring you don't dislodge any of the connecting cables.  Wait a while to let the readings settle down
-6. Connect the **change** node to the **cloudant out** node and deploy the flow.  Ensure you remain holding onto the DHT sensor
-7. Wait until about 20-30 records have been written *(try to get the same number of database records as you created for class 0)* then delete the connection to the **cloudant out** node and deploy to stop recording any more data.  You can release the DHT sensor now
+5. Place your finger on the IKS01A2 HTS221 sensor, ensuring you don't dislodge any of the connecting cables.  Wait a while to let the readings settle down
+6. Connect the **change** node to the **cloudant out** node and deploy the flow.  Ensure your finger remains on the HTS221 sensor
+7. Wait until about 20-30 records have been written *(try to get the same number of database records as you created for class 0)* then delete the connection to the **cloudant out** node and deploy to stop recording any more data.  You can release the HTS221 sensor now
 
 ## Reset the training database
 

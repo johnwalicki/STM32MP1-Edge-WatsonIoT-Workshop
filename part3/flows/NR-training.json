@@ -1,1 +1,97 @@
-[{"id":"f46b4c67.73cb2","type":"ibmiot in","z":"deb0d57.1c46528","authentication":"boundService","apiKey":"","inputType":"evt","logicalInterface":"","ruleId":"","deviceId":"","applicationId":"","deviceType":"+","eventType":"+","commandType":"","format":"json","name":"IBM IoT","service":"registered","allDevices":true,"allApplications":"","allDeviceTypes":true,"allLogicalInterfaces":"","allEvents":true,"allCommands":"","allFormats":"","qos":0,"x":130,"y":100,"wires":[["e09fb3f3.79f538"]]},{"id":"e09fb3f3.79f538","type":"change","z":"deb0d57.1c46528","name":"","rules":[{"t":"set","p":"payload","pt":"msg","to":"msg.payload.{\"time\" : $millis(), \"temp\" : d.temp, \"humidity\" : d.humidity} ","tot":"jsonata"},{"t":"set","p":"payload.class","pt":"msg","to":"0","tot":"num"}],"action":"","property":"","from":"","to":"","reg":false,"x":280,"y":100,"wires":[["84be0f97.8f672"]]},{"id":"84be0f97.8f672","type":"debug","z":"deb0d57.1c46528","name":"","active":true,"tosidebar":true,"console":false,"tostatus":false,"complete":"false","x":450,"y":140,"wires":[]},{"id":"5a8d3b21.87bb3c","type":"cloudant out","z":"deb0d57.1c46528","name":"","cloudant":"","database":"training","service":"bi-ESP8266WorkshopCourse-cloudantNoSQLDB","payonly":false,"operation":"insert","x":460,"y":100,"wires":[]}]
+[
+    {
+        "id": "e0335f0b.88fb",
+        "type": "ibmiot in",
+        "z": "14c239b5.b8254e",
+        "authentication": "boundService",
+        "apiKey": "",
+        "inputType": "evt",
+        "logicalInterface": "",
+        "ruleId": "",
+        "deviceId": "STM32MP1-Edge001",
+        "applicationId": "",
+        "deviceType": "STM32MP1",
+        "eventType": "+",
+        "commandType": "",
+        "format": "json",
+        "name": "IBM IoT",
+        "service": "registered",
+        "allDevices": false,
+        "allApplications": "",
+        "allDeviceTypes": false,
+        "allLogicalInterfaces": "",
+        "allEvents": true,
+        "allCommands": "",
+        "allFormats": "",
+        "qos": 0,
+        "x": 90,
+        "y": 120,
+        "wires": [
+            [
+                "a4397b6e.9bf3"
+            ]
+        ]
+    },
+    {
+        "id": "a4397b6e.9bf3",
+        "type": "change",
+        "z": "14c239b5.b8254e",
+        "name": "Training",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "msg.payload.{\"time\" : $millis(), \"temp\" : d.temperature, \"humidity\" : d.humidity} ",
+                "tot": "jsonata"
+            },
+            {
+                "t": "set",
+                "p": "payload.class",
+                "pt": "msg",
+                "to": "0",
+                "tot": "num"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 260,
+        "y": 120,
+        "wires": [
+            [
+                "6e48cbde.2e7504"
+            ]
+        ]
+    },
+    {
+        "id": "6e48cbde.2e7504",
+        "type": "debug",
+        "z": "14c239b5.b8254e",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "x": 450,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "1538ce33.2ae0e2",
+        "type": "cloudant out",
+        "z": "14c239b5.b8254e",
+        "name": "",
+        "cloudant": "",
+        "database": "training",
+        "service": "",
+        "payonly": true,
+        "operation": "insert",
+        "x": 440,
+        "y": 100,
+        "wires": []
+    }
+]
