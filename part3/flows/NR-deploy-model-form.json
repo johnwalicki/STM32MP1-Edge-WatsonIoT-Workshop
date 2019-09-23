@@ -1,0 +1,137 @@
+[
+    {
+        "id": "15555f46.4d2329",
+        "type": "tab",
+        "label": "Send Edge Model",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "5390573.4446da8",
+        "type": "ibmiot out",
+        "z": "15555f46.4d2329",
+        "authentication": "boundService",
+        "apiKey": "",
+        "outputType": "cmd",
+        "deviceId": "STM32MP1-Edge001",
+        "deviceType": "STM32MP1",
+        "eventCommandType": "EdgeModel",
+        "format": "json",
+        "data": "{}",
+        "qos": 0,
+        "name": "IBM IoT",
+        "service": "registered",
+        "x": 580,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "55db89a7.a5a2d8",
+        "type": "ui_form",
+        "z": "15555f46.4d2329",
+        "name": "Dashboard Form",
+        "label": "Send Model Coefficients",
+        "group": "f636ad3.71e26d",
+        "order": 0,
+        "width": "10",
+        "height": "6",
+        "options": [
+            {
+                "label": "MODEL_INTERCEPT",
+                "value": "MODEL_INTERCEPT",
+                "type": "number",
+                "required": true
+            },
+            {
+                "label": "MODEL_TEMP_COEF",
+                "value": "MODEL_TEMP_COEF",
+                "type": "number",
+                "required": true
+            },
+            {
+                "label": "MODEL_HUM_COEF",
+                "value": "MODEL_HUM_COEF",
+                "type": "number",
+                "required": true
+            }
+        ],
+        "formValue": {
+            "MODEL_INTERCEPT": "",
+            "MODEL_TEMP_COEF": "",
+            "MODEL_HUM_COEF": ""
+        },
+        "payload": "",
+        "submit": "Submit",
+        "cancel": "Cancel",
+        "topic": "",
+        "x": 140,
+        "y": 120,
+        "wires": [
+            [
+                "de411c41.9d981"
+            ]
+        ]
+    },
+    {
+        "id": "de411c41.9d981",
+        "type": "change",
+        "z": "15555f46.4d2329",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "{\"EdgeModel\":{ \t    \"MODEL_INTERCEPT\": msg.payload.MODEL_INTERCEPT, \t    \"MODEL_TEMP_COEF\": msg.payload.MODEL_TEMP_COEF,\t    \"MODEL_HUM_COEF\" : msg.payload.MODEL_HUM_COEF \t    }\t}",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 360,
+        "y": 120,
+        "wires": [
+            [
+                "e62f7096.78523",
+                "5390573.4446da8"
+            ]
+        ]
+    },
+    {
+        "id": "e62f7096.78523",
+        "type": "debug",
+        "z": "15555f46.4d2329",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "x": 590,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "f636ad3.71e26d",
+        "type": "ui_group",
+        "z": "",
+        "name": "Change STM32MP1 Edge Scoring",
+        "tab": "89134e63.e9e62",
+        "disp": true,
+        "width": "10",
+        "collapse": false
+    },
+    {
+        "id": "89134e63.e9e62",
+        "type": "ui_tab",
+        "z": "",
+        "name": "STM32MP1 Edge Scoring",
+        "icon": "dashboard",
+        "order": 1,
+        "disabled": false,
+        "hidden": false
+    }
+]

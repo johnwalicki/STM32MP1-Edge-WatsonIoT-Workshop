@@ -6,7 +6,23 @@
 
 ## Learning Objectives
 
-In this section you will learn how to take the model parameters generated in the previous section and implement a function to run the model on the ESP8266 to provide real-time classification.
+In this section you will learn how to take the model parameters generated in the previous section and implement a function to run the model on the STM32MP1 to provide real-time classification.
+
+## Deploy the Model to the Edge device
+
+Now that the Jupyter notebook and Spark have determined the classification model parameters, the parameters need to be sent to the STM32MP1 Edge Device for real-time scoring.
+
+## Node-RED Form to Deploy the coefficient Model parameters
+
+In the Node-RED instance running on IBM Cloud, import or create this [flow](flows/NR-deploy-model-form.json) using the Dashboard form node.
+
+![nodered deploy model form](screenshots/nr-dashboard-form-flow-deploy-model.png)
+![nodered deploy model coef](screenshots/nr-dashboard-form-model-coef.png)
+![nodered deploy model coef](screenshots/nr-dashboard-form-deploy-coef.png)
+
+## Receive Model Parameters on the Edge
+
+When the form in the IBM Cloud deploys the model, the model coefficient values will be sent in an MQTT packet to the STM32MP1 Edge device.  This [flow](flows/) will receive the data and set several globals.  The edge device will
 
 ## Logistic regression
 
@@ -26,7 +42,7 @@ so the first coefficient is the weighting for the humidity property and the seco
 
 The sigmoid function is: ```f(x) = 1/(1+e^-x)```
 
-Given the two functions we can create an implementation in Node-RED that can be run on the Node-RED edge application:
+Given the two functions we can create an implementation in Node-RED that can be run on the Node-RED edge application for edge classification and scoring:
 
 ***
 **Part 3** - [Watson Studio](STUDIO.md) - [Training Data](TRAINING.md) - [Notebooks](JUPYTER.md) - [**STM32MP1 model**](MODEL.md) - [Summary](SUMMARY.md)
