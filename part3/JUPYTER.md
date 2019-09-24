@@ -71,7 +71,7 @@ def readDataFrameFromCloudant(database):
 ```
 
 - Press the **Run** button in the toolbar to run the cells ![Run first cell](screenshots/WatsonStudio-cell1.png)
-- Move the focus to the next cell and copy in the following python, which calls the function defined in the cell to load the data from Cloudant training database *(this assumes you used the database name **training** when capturing training data, if not, modify the database name)*:
+- Move the focus to the next cell and copy in the following python, which calls the function defined in the cell to load the data from Cloudant training database *(this assumes you used the database name **training** when capturing training data, if not, modify the database name):
 
 ```python
 df=readDataFrameFromCloudant('training')
@@ -95,6 +95,7 @@ df.createOrReplaceTempView('df')
 ```
 
 - The temperature and humidity data is imported as strings, so we will convert the columns to doubles.
+
 ```python
 from pyspark.sql.functions import translate, col
 
