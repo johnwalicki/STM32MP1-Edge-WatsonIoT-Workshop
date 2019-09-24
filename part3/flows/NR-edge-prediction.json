@@ -1,0 +1,273 @@
+[
+    {
+        "id": "9434d0a7.82ba38",
+        "type": "tab",
+        "label": "Sensor Python Function",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "4359f268.041ed4",
+        "type": "python3-function",
+        "z": "9434d0a7.82ba38",
+        "name": "Read Sensor Data",
+        "func": "import math\nimport os\n\ndef find_iio_device(data):\n    prefix = \"/sys/bus/iio/devices/\"\n    try:\n        for filefolder in os.listdir(prefix):\n            if os.path.exists(prefix + '/' + filefolder + '/' + data):\n                ''' return directory which contains \"data\" '''\n                return (prefix + '/' + filefolder + '/')\n    except OSError:\n        pass\n    return None\n\ndef read_temperature(temperature_prefix_path):\n    offset = 0.0\n    raw = 0.0\n    scale = 0.0\n    temp = 0.0\n    if temperature_prefix_path:\n        with open(temperature_prefix_path + 'in_temp_offset', 'r') as f:\n            offset = float(f.read())\n        with open(temperature_prefix_path + 'in_temp_raw', 'r') as f:\n            raw = float(f.read())\n        with open(temperature_prefix_path + 'in_temp_scale', 'r') as f:\n            scale = float(f.read())\n        temp = (offset + raw) * scale\n        ''' print('HTS221 temperature:',temp)'''\n        ''' 26.110312499986406 is too much precision, round to 26.11 '''\n        ''' print('{\"temperature\": %.2f}' % temp) '''\n        return temp\n    return 0\n\ndef read_humidity(humidity_prefix_path):\n    offset = 0.0\n    raw = 0.0\n    scale = 0.0\n    humidity = 0.0\n    if humidity_prefix_path:\n        with open(humidity_prefix_path + 'in_humidityrelative_offset', 'r') as f:\n            offset = float(f.read())\n        with open(humidity_prefix_path + 'in_humidityrelative_raw', 'r') as f:\n            raw = float(f.read())\n        with open(humidity_prefix_path + 'in_humidityrelative_scale', 'r') as f:\n            scale = float(f.read())\n        humidity = (offset + raw) * scale\n        ''' print('HTS221 humidity:', humidity)'''\n        ''' print('{\"humidity\": %.2f}' % humidity) '''\n        return humidity\n    return 0\n\ndef read_accel(accelerometer_prefix_path):\n    raw = 0.0\n    scale = 0.0\n    in_x = 0.0\n    in_y = 0.0\n    in_z = 0.0\n    if accelerometer_prefix_path:\n        with open(accelerometer_prefix_path + 'in_accel_x_raw', 'r') as f:\n            scale = float(f.read())\n        with open(accelerometer_prefix_path + 'in_accel_x_scale', 'r') as f:\n            raw = float(f.read())\n        in_x = int(raw * scale * 256.0 / 9.81)\n        with open(accelerometer_prefix_path + 'in_accel_y_raw', 'r') as f:\n            scale = float(f.read())\n        with open(accelerometer_prefix_path + 'in_accel_y_scale', 'r') as f:\n            raw = float(f.read())\n        in_y = int(raw * scale * 256.0 / 9.81)\n        with open(accelerometer_prefix_path + 'in_accel_z_raw', 'r') as f:\n            scale = float(f.read())\n        with open(accelerometer_prefix_path + 'in_accel_z_scale', 'r') as f:\n            raw = float(f.read())\n        in_z = int(raw * scale * 256.0 / 9.81)\n        ''' print('LSM6DSL Accelerometer x:',in_x, 'y:',in_y, 'z:',in_z) '''\n        ''' print('{\"x\":',in_x,'}') '''\n        ''' print('{\"y\":',in_y,'}') '''\n        ''' print('{\"z\":',in_z,'}') '''\n        return in_x, in_y, in_z\n    return 0, 0, 0\n\n\ndef read_gyro(gyro_prefix_path):\n    raw = 0.0\n    scale = 0.0\n    in_gx = 0.0\n    in_gy = 0.0\n    in_gz = 0.0\n    if gyroscope_prefix_path:\n        with open(gyroscope_prefix_path + 'in_anglvel_x_raw', 'r') as f:\n            scale = float(f.read())\n        with open(gyroscope_prefix_path + 'in_anglvel_x_scale', 'r') as f:\n            raw = float(f.read())\n        in_gx = int(raw * scale * 256.0 / 9.81)\n        with open(gyroscope_prefix_path + 'in_anglvel_y_raw', 'r') as f:\n            scale = float(f.read())\n        with open(gyroscope_prefix_path + 'in_anglvel_y_scale', 'r') as f:\n            raw = float(f.read())\n        in_gy = int(raw * scale * 256.0 / 9.81)\n        with open(gyroscope_prefix_path + 'in_anglvel_z_raw', 'r') as f:\n            scale = float(f.read())\n        with open(gyroscope_prefix_path + 'in_anglvel_z_scale', 'r') as f:\n            raw = float(f.read())\n        in_gz = int(raw * scale * 256.0 / 9.81)\n\n        ''' print('LSM6DSL gyroscope gx:',in_gx, 'gy:',in_gy, 'gz:',in_gz)'''\n        ''' print('{\"gx\":',in_gx,'}') '''\n        ''' print('{\"gy\":',in_gy,'}') '''\n        ''' print('{\"gz\":',in_gz,'}') '''\n        return in_gx, in_gy, in_gz\n    return 0, 0, 0\n\n\ntemperature_prefix_path = find_iio_device(\"in_temp_raw\")\nhumidity_prefix_path = find_iio_device(\"in_humidityrelative_raw\")\naccelerometer_prefix_path = find_iio_device(\"in_accel_x_raw\")\ngyroscope_prefix_path = find_iio_device(\"in_anglvel_x_raw\")\n\ntemperature = \"{:.2f}\".format( read_temperature(temperature_prefix_path) )\nhumidity    = \"{:.2f}\".format( read_humidity(humidity_prefix_path) )\nx, y, z = read_accel(accelerometer_prefix_path)\ngx, gy, gz = read_gyro(gyroscope_prefix_path)\n\n''' Print one large json string for conversion in Node-RED\nprint('{\"temperature\":%.2f,\"humidity\":%.2f,\"acc_x\":%d,\"acc_y\":%d,\"acc_z\":%d,\"gyr_x\":%d,\"gyr_y\":%d,\"gyr_z\":%d}' % (temperature, humidity, x, y, z, gx, gy, gz))\nmsg['payload'] = '{\"temperature\":%.2f,\"humidity\":%.2f,\"acc_x\":%d,\"acc_y\":%d,\"acc_z\":%d}' % (temperature, humidity, x, y, z)\n'''\n\nmsg['payload'] = { 'temperature':temperature, 'humidity': humidity, 'acc_x':x, 'acc_y':y, 'acc_z':z, 'gyr_x':gx,'gyr_y':gy,'gyr_z':gz }\nreturn msg",
+        "outputs": 1,
+        "x": 390,
+        "y": 100,
+        "wires": [
+            [
+                "a4b6b4bf.3b2d4",
+                "25129bb4.0b13f4"
+            ]
+        ]
+    },
+    {
+        "id": "f5ecdfd4.ab9978",
+        "type": "inject",
+        "z": "9434d0a7.82ba38",
+        "name": "",
+        "topic": "",
+        "payload": "true",
+        "payloadType": "bool",
+        "repeat": "5",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 150,
+        "y": 100,
+        "wires": [
+            [
+                "4359f268.041ed4"
+            ]
+        ]
+    },
+    {
+        "id": "a4b6b4bf.3b2d4",
+        "type": "debug",
+        "z": "9434d0a7.82ba38",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "x": 710,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "60a21c22.bd029c",
+        "type": "comment",
+        "z": "9434d0a7.82ba38",
+        "name": "Read Sensor Data with Python3 Function",
+        "info": "",
+        "x": 240,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "cabd3e85.809e68",
+        "type": "inject",
+        "z": "9434d0a7.82ba38",
+        "name": "Test Alert image",
+        "topic": "",
+        "payload": "true",
+        "payloadType": "bool",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 200,
+        "y": 440,
+        "wires": [
+            [
+                "be081b32.848c5"
+            ]
+        ]
+    },
+    {
+        "id": "be081b32.848c5",
+        "type": "exec",
+        "z": "9434d0a7.82ba38",
+        "command": "/home/root/edge_alert.sh",
+        "addpay": false,
+        "append": "",
+        "useSpawn": "false",
+        "timer": "",
+        "oldrc": false,
+        "name": "",
+        "x": 450,
+        "y": 400,
+        "wires": [
+            [
+                "3672f362.86af5c"
+            ],
+            [],
+            []
+        ]
+    },
+    {
+        "id": "3672f362.86af5c",
+        "type": "debug",
+        "z": "9434d0a7.82ba38",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "x": 710,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "9ded14a9.976d28",
+        "type": "function",
+        "z": "9434d0a7.82ba38",
+        "name": "Prediction - Apply Model",
+        "func": "//var EdgeModel = global.get(\"EdgeModel\") || null;\n\nif( typeof( msg.EdgeModel ) === 'undefined') {\n    return null;\n}\nif( msg.EdgeModel === null) {\n    return null;\n}\n\nvar EdgeModel = msg.EdgeModel ;\nvar CurTemp = msg.payload.temperature;\nvar CurHum  = msg.payload.humidity ;\n\n// apply logit formula C + w1*h + w2*t\n//  float regression = MODEL_INTERCEPT + MODEL_HUM_COEF * h + MODEL_TEMP_COEF * t;\nvar regression = parseFloat( EdgeModel.MODEL_INTERCEPT + \n                             EdgeModel.MODEL_HUM_COEF * CurHum +\n                             EdgeModel.MODEL_TEMP_COEF * CurTemp );\n                             \n// sigmoid logistic function on logit result\nvar Prediction =  parseFloat( 1 / ( 1 + Math.exp(0.0 - regression)));\nmsg.Prediction = Prediction ;\n\nvar SendAlert = false\nif( Prediction >= 0.5 ) {\n    SendAlert = true ;\n} else {\n    SendAlert = false \n}\nmsg.payload = SendAlert;\n\n\n// C function\n// # include math.h\n//float applyModel(float h, float t) {\n  // apply logit formula C + w1*h + w2*t\n//  float regression = MODEL_INTERCEPT + MODEL_HUM_COEF * h + MODEL_TEMP_COEF * t;\n  // return sigmoid logistic function on logit result\n//  return  1/(1 + exp(0.0 - (double)regression));\n//}\n\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 450,
+        "y": 280,
+        "wires": [
+            [
+                "9f37903f.a80d5",
+                "5862d8e6.721768"
+            ]
+        ]
+    },
+    {
+        "id": "9f37903f.a80d5",
+        "type": "debug",
+        "z": "9434d0a7.82ba38",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "x": 710,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "25129bb4.0b13f4",
+        "type": "change",
+        "z": "9434d0a7.82ba38",
+        "name": "Get Edge Model",
+        "rules": [
+            {
+                "t": "set",
+                "p": "EdgeModel",
+                "pt": "msg",
+                "to": "EdgeModel",
+                "tot": "global"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 160,
+        "y": 280,
+        "wires": [
+            [
+                "9ded14a9.976d28",
+                "66d0a538.abf434"
+            ]
+        ]
+    },
+    {
+        "id": "66d0a538.abf434",
+        "type": "debug",
+        "z": "9434d0a7.82ba38",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "EdgeModel",
+        "targetType": "msg",
+        "x": 420,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "5862d8e6.721768",
+        "type": "switch",
+        "z": "9434d0a7.82ba38",
+        "name": "Show Alert Message",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "true"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 180,
+        "y": 400,
+        "wires": [
+            [
+                "be081b32.848c5"
+            ]
+        ]
+    },
+    {
+        "id": "86ba583a.d26b6",
+        "type": "comment",
+        "z": "9434d0a7.82ba38",
+        "name": "Make a Predication based on Trained Model",
+        "info": "",
+        "x": 510,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "9f23180b.3cd668",
+        "type": "comment",
+        "z": "9434d0a7.82ba38",
+        "name": "Display Image on STM32MP1 Screen",
+        "info": "",
+        "x": 490,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "b5723221.f7d3d8",
+        "type": "wiotp out",
+        "z": "9434d0a7.82ba38",
+        "authType": "d",
+        "qs": "false",
+        "qsDeviceId": "",
+        "deviceKey": "7ff6a86d.43b918",
+        "deviceType": "",
+        "deviceId": "",
+        "event": "event",
+        "format": "json",
+        "qos": "",
+        "name": "",
+        "x": 690,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "7ff6a86d.43b918",
+        "type": "wiotp-credentials",
+        "z": "",
+        "name": "",
+        "org": "abcdef",
+        "serverName": "abcdef.messaging.internetofthings.ibmcloud.com",
+        "devType": "STM32MP1",
+        "devId": "STM32MP1-Edge001",
+        "keepalive": "60",
+        "cleansession": true,
+        "tls": "",
+        "usetls": false
+    }
+]

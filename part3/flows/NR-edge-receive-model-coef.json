@@ -1,0 +1,84 @@
+[
+    {
+        "id": "7d3e29cc.af3348",
+        "type": "tab",
+        "label": "Scoring",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "52e7348e.c00edc",
+        "type": "wiotp in",
+        "z": "7d3e29cc.af3348",
+        "authType": "d",
+        "deviceKey": "7ff6a86d.43b918",
+        "deviceType": "",
+        "deviceId": "",
+        "command": "EdgeModel",
+        "commandType": "g",
+        "qos": 0,
+        "name": "",
+        "x": 120,
+        "y": 140,
+        "wires": [
+            [
+                "9ba070f4.0e7138",
+                "71b9ba71.1e5f54"
+            ]
+        ]
+    },
+    {
+        "id": "9ba070f4.0e7138",
+        "type": "debug",
+        "z": "7d3e29cc.af3348",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "x": 330,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "71b9ba71.1e5f54",
+        "type": "change",
+        "z": "7d3e29cc.af3348",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "EdgeModel",
+                "pt": "global",
+                "to": "payload.EdgeModel",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 380,
+        "y": 180,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "7ff6a86d.43b918",
+        "type": "wiotp-credentials",
+        "z": "",
+        "name": "",
+        "org": "abcdef",
+        "serverName": "abcdef.messaging.internetofthings.ibmcloud.com",
+        "devType": "STM32MP1",
+        "devId": "STM32MP1-Edge001",
+        "keepalive": "60",
+        "cleansession": true,
+        "tls": "",
+        "usetls": false
+    }
+]

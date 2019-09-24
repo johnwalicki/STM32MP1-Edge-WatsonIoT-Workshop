@@ -22,7 +22,9 @@ In the Node-RED instance running on IBM Cloud, import or create this [flow](flow
 
 ## Receive Model Parameters on the Edge
 
-When the form in the IBM Cloud deploys the model, the model coefficient values will be sent in an MQTT packet to the STM32MP1 Edge device.  This [flow](flows/) will receive the data and set several globals.  The edge device will
+When the form in the IBM Cloud deploys the model, the model coefficient values will be sent in an MQTT packet to the STM32MP1 Edge device.  This [flow](flows/NR-edge-receive-model-coef.json) will receive the model coefficients and store them in a global.
+
+![nodered receive edge model](screenshots/nr-flow-receive-edge-model.png)
 
 ## Logistic regression
 
@@ -43,6 +45,10 @@ so the first coefficient is the weighting for the humidity property and the seco
 The sigmoid function is: ```f(x) = 1/(1+e^-x)```
 
 Given the two functions we can create an implementation in Node-RED that can be run on the Node-RED edge application for edge classification and scoring:
+
+## Edge Prediction
+ The edge device will apply the model coefficients and score the real-time temperature and humidity readings to determine if your finger is on the HTS221 sensor.
+![nodered edge prediction model](screenshots/nr-edge-prediction.png)
 
 ***
 **Part 3** - [Watson Studio](STUDIO.md) - [Training Data](TRAINING.md) - [Notebooks](JUPYTER.md) - [**STM32MP1 model**](MODEL.md) - [Summary](SUMMARY.md)
