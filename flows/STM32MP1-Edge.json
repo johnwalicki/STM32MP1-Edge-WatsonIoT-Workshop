@@ -7,28 +7,35 @@
         "info": ""
     },
     {
+        "id": "32622e38.992282",
+        "type": "tab",
+        "label": "Read IKS01A2 Sensors",
+        "disabled": false,
+        "info": ""
+    },
+    {
         "id": "728d4a4a.7525bc",
         "type": "tab",
         "label": "Call Sensor Python Script",
-        "disabled": true,
+        "disabled": false,
         "info": ""
     },
     {
-        "id": "2644c6a5.5233ba",
-        "type": "tab",
-        "label": "Sensor Python Function",
-        "disabled": true,
-        "info": ""
-    },
-    {
-        "id": "7d3e29cc.af3348",
+        "id": "14c6537a.d4bca5",
         "type": "tab",
         "label": "Update Edge Model",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "9434d0a7.82ba38",
+        "type": "tab",
+        "label": "Python IKS01A2 Sensors",
         "disabled": true,
         "info": ""
     },
     {
-        "id": "77507e1f.e29d9",
+        "id": "7ff6a86d.43b918",
         "type": "wiotp-credentials",
         "z": "",
         "name": "",
@@ -42,6 +49,24 @@
         "usetls": false
     },
     {
+        "id": "9a601d77.a4951",
+        "type": "wiotp out",
+        "z": "39b3a8ed.9d337",
+        "authType": "d",
+        "qs": "false",
+        "qsDeviceId": "",
+        "deviceKey": "7ff6a86d.43b918",
+        "deviceType": "",
+        "deviceId": "",
+        "event": "event",
+        "format": "json",
+        "qos": "",
+        "name": "Registered Device",
+        "x": 590,
+        "y": 240,
+        "wires": []
+    },
+    {
         "id": "1260746e.1f075c",
         "type": "function",
         "z": "39b3a8ed.9d337",
@@ -53,7 +78,8 @@
         "y": 160,
         "wires": [
             [
-                "23aabb1b.b0dc7c"
+                "23aabb1b.b0dc7c",
+                "9a601d77.a4951"
             ]
         ]
     },
@@ -67,8 +93,8 @@
         "console": false,
         "tostatus": false,
         "complete": "false",
-        "x": 550,
-        "y": 100,
+        "x": 570,
+        "y": 80,
         "wires": []
     },
     {
@@ -86,77 +112,8 @@
         "x": 170,
         "y": 160,
         "wires": [
-            [
-                "1260746e.1f075c"
-            ]
-        ]
-    },
-    {
-        "id": "e92a53f8.a4344",
-        "type": "python3-function",
-        "z": "2644c6a5.5233ba",
-        "name": "Read Sensor Data",
-        "func": "import math\nimport os\n\ndef find_iio_device(data):\n    prefix = \"/sys/bus/iio/devices/\"\n    try:\n        for filefolder in os.listdir(prefix):\n            if os.path.exists(prefix + '/' + filefolder + '/' + data):\n                ''' return directory which contains \"data\" '''\n                return (prefix + '/' + filefolder + '/')\n    except OSError:\n        pass\n    return None\n\ndef read_temperature(temperature_prefix_path):\n    offset = 0.0\n    raw = 0.0\n    scale = 0.0\n    temp = 0.0\n    if temperature_prefix_path:\n        with open(temperature_prefix_path + 'in_temp_offset', 'r') as f:\n            offset = float(f.read())\n        with open(temperature_prefix_path + 'in_temp_raw', 'r') as f:\n            raw = float(f.read())\n        with open(temperature_prefix_path + 'in_temp_scale', 'r') as f:\n            scale = float(f.read())\n        temp = (offset + raw) * scale\n        ''' print('HTS221 temperature:',temp)'''\n        ''' 26.110312499986406 is too much precision, round to 26.11 '''\n        ''' print('{\"temperature\": %.2f}' % temp) '''\n        return temp\n    return 0\n\ndef read_humidity(humidity_prefix_path):\n    offset = 0.0\n    raw = 0.0\n    scale = 0.0\n    humidity = 0.0\n    if humidity_prefix_path:\n        with open(humidity_prefix_path + 'in_humidityrelative_offset', 'r') as f:\n            offset = float(f.read())\n        with open(humidity_prefix_path + 'in_humidityrelative_raw', 'r') as f:\n            raw = float(f.read())\n        with open(humidity_prefix_path + 'in_humidityrelative_scale', 'r') as f:\n            scale = float(f.read())\n        humidity = (offset + raw) * scale\n        ''' print('HTS221 humidity:', humidity)'''\n        ''' print('{\"humidity\": %.2f}' % humidity) '''\n        return humidity\n    return 0\n\ndef read_accel(accelerometer_prefix_path):\n    raw = 0.0\n    scale = 0.0\n    in_x = 0.0\n    in_y = 0.0\n    in_z = 0.0\n    if accelerometer_prefix_path:\n        with open(accelerometer_prefix_path + 'in_accel_x_raw', 'r') as f:\n            scale = float(f.read())\n        with open(accelerometer_prefix_path + 'in_accel_x_scale', 'r') as f:\n            raw = float(f.read())\n        in_x = int(raw * scale * 256.0 / 9.81)\n        with open(accelerometer_prefix_path + 'in_accel_y_raw', 'r') as f:\n            scale = float(f.read())\n        with open(accelerometer_prefix_path + 'in_accel_y_scale', 'r') as f:\n            raw = float(f.read())\n        in_y = int(raw * scale * 256.0 / 9.81)\n        with open(accelerometer_prefix_path + 'in_accel_z_raw', 'r') as f:\n            scale = float(f.read())\n        with open(accelerometer_prefix_path + 'in_accel_z_scale', 'r') as f:\n            raw = float(f.read())\n        in_z = int(raw * scale * 256.0 / 9.81)\n        ''' print('LSM6DSL Accelerometer x:',in_x, 'y:',in_y, 'z:',in_z) '''\n        ''' print('{\"x\":',in_x,'}') '''\n        ''' print('{\"y\":',in_y,'}') '''\n        ''' print('{\"z\":',in_z,'}') '''\n        return in_x, in_y, in_z\n    return 0, 0, 0\n\n\ndef read_gyro(gyro_prefix_path):\n    raw = 0.0\n    scale = 0.0\n    in_gx = 0.0\n    in_gy = 0.0\n    in_gz = 0.0\n    if gyroscope_prefix_path:\n        with open(gyroscope_prefix_path + 'in_anglvel_x_raw', 'r') as f:\n            scale = float(f.read())\n        with open(gyroscope_prefix_path + 'in_anglvel_x_scale', 'r') as f:\n            raw = float(f.read())\n        in_gx = int(raw * scale * 256.0 / 9.81)\n        with open(gyroscope_prefix_path + 'in_anglvel_y_raw', 'r') as f:\n            scale = float(f.read())\n        with open(gyroscope_prefix_path + 'in_anglvel_y_scale', 'r') as f:\n            raw = float(f.read())\n        in_gy = int(raw * scale * 256.0 / 9.81)\n        with open(gyroscope_prefix_path + 'in_anglvel_z_raw', 'r') as f:\n            scale = float(f.read())\n        with open(gyroscope_prefix_path + 'in_anglvel_z_scale', 'r') as f:\n            raw = float(f.read())\n        in_gz = int(raw * scale * 256.0 / 9.81)\n\n        ''' print('LSM6DSL gyroscope gx:',in_gx, 'gy:',in_gy, 'gz:',in_gz)'''\n        ''' print('{\"gx\":',in_gx,'}') '''\n        ''' print('{\"gy\":',in_gy,'}') '''\n        ''' print('{\"gz\":',in_gz,'}') '''\n        return in_gx, in_gy, in_gz\n    return 0, 0, 0\n\n\ntemperature_prefix_path = find_iio_device(\"in_temp_raw\")\nhumidity_prefix_path = find_iio_device(\"in_humidityrelative_raw\")\naccelerometer_prefix_path = find_iio_device(\"in_accel_x_raw\")\ngyroscope_prefix_path = find_iio_device(\"in_anglvel_x_raw\")\n\ntemperature = \"{:.2f}\".format( read_temperature(temperature_prefix_path) )\nhumidity    = \"{:.2f}\".format( read_humidity(humidity_prefix_path) )\nx, y, z = read_accel(accelerometer_prefix_path)\ngx, gy, gz = read_gyro(gyroscope_prefix_path)\n\n''' Print one large json string for conversion in Node-RED\nprint('{\"temperature\":%.2f,\"humidity\":%.2f,\"acc_x\":%d,\"acc_y\":%d,\"acc_z\":%d,\"gyr_x\":%d,\"gyr_y\":%d,\"gyr_z\":%d}' % (temperature, humidity, x, y, z, gx, gy, gz))\nmsg['payload'] = '{\"temperature\":%.2f,\"humidity\":%.2f,\"acc_x\":%d,\"acc_y\":%d,\"acc_z\":%d}' % (temperature, humidity, x, y, z)\n'''\n\nmsg['payload'] = { 'temperature':temperature, 'humidity': humidity, 'acc_x':x, 'acc_y':y, 'acc_z':z, 'gyr_x':gx,'gyr_y':gy,'gyr_z':gz }\nreturn msg",
-        "outputs": 1,
-        "x": 390,
-        "y": 100,
-        "wires": [
-            [
-                "d12f0eec.0029f8",
-                "1b6ba154.a54be7",
-                "b2671f3e.bd145"
-            ]
-        ]
-    },
-    {
-        "id": "c148f993.24897",
-        "type": "inject",
-        "z": "2644c6a5.5233ba",
-        "name": "",
-        "topic": "",
-        "payload": "true",
-        "payloadType": "bool",
-        "repeat": "5",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "x": 150,
-        "y": 100,
-        "wires": [
             []
         ]
-    },
-    {
-        "id": "d12f0eec.0029f8",
-        "type": "debug",
-        "z": "2644c6a5.5233ba",
-        "name": "",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "x": 710,
-        "y": 100,
-        "wires": []
-    },
-    {
-        "id": "1b6ba154.a54be7",
-        "type": "wiotp out",
-        "z": "2644c6a5.5233ba",
-        "authType": "d",
-        "qs": "false",
-        "qsDeviceId": "",
-        "deviceKey": "77507e1f.e29d9",
-        "deviceType": "",
-        "deviceId": "",
-        "event": "status",
-        "format": "json",
-        "qos": "",
-        "name": "",
-        "x": 690,
-        "y": 140,
-        "wires": []
     },
     {
         "id": "de80bf5b.3c745",
@@ -226,7 +183,8 @@
         "y": 200,
         "wires": [
             [
-                "b469d7fc.f70a"
+                "b469d7fc.f70a",
+                "b97f836c.2d35c"
             ]
         ]
     },
@@ -251,10 +209,10 @@
         "authType": "d",
         "qs": "false",
         "qsDeviceId": "",
-        "deviceKey": "77507e1f.e29d9",
+        "deviceKey": "7ff6a86d.43b918",
         "deviceType": "",
         "deviceId": "",
-        "event": "status",
+        "event": "event",
         "format": "json",
         "qos": "",
         "name": "",
@@ -263,9 +221,88 @@
         "wires": []
     },
     {
-        "id": "c9f62776.d316f8",
+        "id": "925906fb.0beef8",
         "type": "comment",
-        "z": "2644c6a5.5233ba",
+        "z": "39b3a8ed.9d337",
+        "name": "Generate some random # and send to Watson IoT Platform",
+        "info": "",
+        "x": 260,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "f3153647.e269",
+        "type": "wiotp out",
+        "z": "39b3a8ed.9d337",
+        "authType": "d",
+        "qs": "true",
+        "qsDeviceId": "stm32mp1-xyz",
+        "deviceKey": "",
+        "deviceType": "",
+        "deviceId": "",
+        "event": "event",
+        "format": "json",
+        "qos": "",
+        "name": "Quickstart",
+        "x": 570,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "4359f268.041ed4",
+        "type": "python3-function",
+        "z": "9434d0a7.82ba38",
+        "name": "Read Sensor Data",
+        "func": "import math\nimport os\n\ndef find_iio_device(data):\n    prefix = \"/sys/bus/iio/devices/\"\n    try:\n        for filefolder in os.listdir(prefix):\n            if os.path.exists(prefix + '/' + filefolder + '/' + data):\n                ''' return directory which contains \"data\" '''\n                return (prefix + '/' + filefolder + '/')\n    except OSError:\n        pass\n    return None\n\ndef read_temperature(temperature_prefix_path):\n    offset = 0.0\n    raw = 0.0\n    scale = 0.0\n    temp = 0.0\n    if temperature_prefix_path:\n        with open(temperature_prefix_path + 'in_temp_offset', 'r') as f:\n            offset = float(f.read())\n        with open(temperature_prefix_path + 'in_temp_raw', 'r') as f:\n            raw = float(f.read())\n        with open(temperature_prefix_path + 'in_temp_scale', 'r') as f:\n            scale = float(f.read())\n        temp = (offset + raw) * scale\n        ''' print('HTS221 temperature:',temp)'''\n        ''' 26.110312499986406 is too much precision, round to 26.11 '''\n        ''' print('{\"temperature\": %.2f}' % temp) '''\n        return temp\n    return 0\n\ndef read_humidity(humidity_prefix_path):\n    offset = 0.0\n    raw = 0.0\n    scale = 0.0\n    humidity = 0.0\n    if humidity_prefix_path:\n        with open(humidity_prefix_path + 'in_humidityrelative_offset', 'r') as f:\n            offset = float(f.read())\n        with open(humidity_prefix_path + 'in_humidityrelative_raw', 'r') as f:\n            raw = float(f.read())\n        with open(humidity_prefix_path + 'in_humidityrelative_scale', 'r') as f:\n            scale = float(f.read())\n        humidity = (offset + raw) * scale\n        ''' print('HTS221 humidity:', humidity)'''\n        ''' print('{\"humidity\": %.2f}' % humidity) '''\n        return humidity\n    return 0\n\ndef read_accel(accelerometer_prefix_path):\n    raw = 0.0\n    scale = 0.0\n    in_x = 0.0\n    in_y = 0.0\n    in_z = 0.0\n    if accelerometer_prefix_path:\n        with open(accelerometer_prefix_path + 'in_accel_x_raw', 'r') as f:\n            scale = float(f.read())\n        with open(accelerometer_prefix_path + 'in_accel_x_scale', 'r') as f:\n            raw = float(f.read())\n        in_x = int(raw * scale * 256.0 / 9.81)\n        with open(accelerometer_prefix_path + 'in_accel_y_raw', 'r') as f:\n            scale = float(f.read())\n        with open(accelerometer_prefix_path + 'in_accel_y_scale', 'r') as f:\n            raw = float(f.read())\n        in_y = int(raw * scale * 256.0 / 9.81)\n        with open(accelerometer_prefix_path + 'in_accel_z_raw', 'r') as f:\n            scale = float(f.read())\n        with open(accelerometer_prefix_path + 'in_accel_z_scale', 'r') as f:\n            raw = float(f.read())\n        in_z = int(raw * scale * 256.0 / 9.81)\n        ''' print('LSM6DSL Accelerometer x:',in_x, 'y:',in_y, 'z:',in_z) '''\n        ''' print('{\"x\":',in_x,'}') '''\n        ''' print('{\"y\":',in_y,'}') '''\n        ''' print('{\"z\":',in_z,'}') '''\n        return in_x, in_y, in_z\n    return 0, 0, 0\n\n\ndef read_gyro(gyro_prefix_path):\n    raw = 0.0\n    scale = 0.0\n    in_gx = 0.0\n    in_gy = 0.0\n    in_gz = 0.0\n    if gyroscope_prefix_path:\n        with open(gyroscope_prefix_path + 'in_anglvel_x_raw', 'r') as f:\n            scale = float(f.read())\n        with open(gyroscope_prefix_path + 'in_anglvel_x_scale', 'r') as f:\n            raw = float(f.read())\n        in_gx = int(raw * scale * 256.0 / 9.81)\n        with open(gyroscope_prefix_path + 'in_anglvel_y_raw', 'r') as f:\n            scale = float(f.read())\n        with open(gyroscope_prefix_path + 'in_anglvel_y_scale', 'r') as f:\n            raw = float(f.read())\n        in_gy = int(raw * scale * 256.0 / 9.81)\n        with open(gyroscope_prefix_path + 'in_anglvel_z_raw', 'r') as f:\n            scale = float(f.read())\n        with open(gyroscope_prefix_path + 'in_anglvel_z_scale', 'r') as f:\n            raw = float(f.read())\n        in_gz = int(raw * scale * 256.0 / 9.81)\n\n        ''' print('LSM6DSL gyroscope gx:',in_gx, 'gy:',in_gy, 'gz:',in_gz)'''\n        ''' print('{\"gx\":',in_gx,'}') '''\n        ''' print('{\"gy\":',in_gy,'}') '''\n        ''' print('{\"gz\":',in_gz,'}') '''\n        return in_gx, in_gy, in_gz\n    return 0, 0, 0\n\n\ntemperature_prefix_path = find_iio_device(\"in_temp_raw\")\nhumidity_prefix_path = find_iio_device(\"in_humidityrelative_raw\")\naccelerometer_prefix_path = find_iio_device(\"in_accel_x_raw\")\ngyroscope_prefix_path = find_iio_device(\"in_anglvel_x_raw\")\n\ntemperature = \"{:.2f}\".format( read_temperature(temperature_prefix_path) )\nhumidity    = \"{:.2f}\".format( read_humidity(humidity_prefix_path) )\nx, y, z = read_accel(accelerometer_prefix_path)\ngx, gy, gz = read_gyro(gyroscope_prefix_path)\n\n''' Print one large json string for conversion in Node-RED\nprint('{\"temperature\":%.2f,\"humidity\":%.2f,\"acc_x\":%d,\"acc_y\":%d,\"acc_z\":%d,\"gyr_x\":%d,\"gyr_y\":%d,\"gyr_z\":%d}' % (temperature, humidity, x, y, z, gx, gy, gz))\nmsg['payload'] = '{\"temperature\":%.2f,\"humidity\":%.2f,\"acc_x\":%d,\"acc_y\":%d,\"acc_z\":%d}' % (temperature, humidity, x, y, z)\n'''\n\nmsg['payload'] = { 'temperature':temperature, 'humidity': humidity, 'acc_x':x, 'acc_y':y, 'acc_z':z, 'gyr_x':gx,'gyr_y':gy,'gyr_z':gz }\nreturn msg",
+        "outputs": 1,
+        "x": 390,
+        "y": 100,
+        "wires": [
+            [
+                "a4b6b4bf.3b2d4",
+                "b5723221.f7d3d8",
+                "25129bb4.0b13f4"
+            ]
+        ]
+    },
+    {
+        "id": "f5ecdfd4.ab9978",
+        "type": "inject",
+        "z": "9434d0a7.82ba38",
+        "name": "",
+        "topic": "",
+        "payload": "true",
+        "payloadType": "bool",
+        "repeat": "1",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 150,
+        "y": 100,
+        "wires": [
+            [
+                "4359f268.041ed4"
+            ]
+        ]
+    },
+    {
+        "id": "a4b6b4bf.3b2d4",
+        "type": "debug",
+        "z": "9434d0a7.82ba38",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "x": 710,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "60a21c22.bd029c",
+        "type": "comment",
+        "z": "9434d0a7.82ba38",
         "name": "Read Sensor Data with Python3 Function",
         "info": "",
         "x": 240,
@@ -273,21 +310,11 @@
         "wires": []
     },
     {
-        "id": "925906fb.0beef8",
-        "type": "comment",
-        "z": "39b3a8ed.9d337",
-        "name": "Generate some random # and send to Watson IoT Platform Quickstart",
-        "info": "",
-        "x": 290,
-        "y": 60,
-        "wires": []
-    },
-    {
-        "id": "52e7348e.c00edc",
+        "id": "e7bfd0f4.10a28",
         "type": "wiotp in",
-        "z": "7d3e29cc.af3348",
+        "z": "14c6537a.d4bca5",
         "authType": "d",
-        "deviceKey": "77507e1f.e29d9",
+        "deviceKey": "7ff6a86d.43b918",
         "deviceType": "",
         "deviceId": "",
         "command": "EdgeModel",
@@ -298,15 +325,15 @@
         "y": 140,
         "wires": [
             [
-                "9ba070f4.0e7138",
-                "71b9ba71.1e5f54"
+                "19cc0b6.eeaa275",
+                "9ed1b524.a24148"
             ]
         ]
     },
     {
-        "id": "9ba070f4.0e7138",
+        "id": "19cc0b6.eeaa275",
         "type": "debug",
-        "z": "7d3e29cc.af3348",
+        "z": "14c6537a.d4bca5",
         "name": "",
         "active": true,
         "tosidebar": true,
@@ -319,9 +346,9 @@
         "wires": []
     },
     {
-        "id": "71b9ba71.1e5f54",
+        "id": "9ed1b524.a24148",
         "type": "change",
-        "z": "7d3e29cc.af3348",
+        "z": "14c6537a.d4bca5",
         "name": "",
         "rules": [
             {
@@ -344,9 +371,9 @@
         ]
     },
     {
-        "id": "6baf983.91f8868",
+        "id": "cabd3e85.809e68",
         "type": "inject",
-        "z": "2644c6a5.5233ba",
+        "z": "9434d0a7.82ba38",
         "name": "Test Alert image",
         "topic": "",
         "payload": "true",
@@ -359,14 +386,14 @@
         "y": 440,
         "wires": [
             [
-                "fc791bae.8d59e"
+                "be081b32.848c5"
             ]
         ]
     },
     {
-        "id": "fc791bae.8d59e",
+        "id": "be081b32.848c5",
         "type": "exec",
-        "z": "2644c6a5.5233ba",
+        "z": "9434d0a7.82ba38",
         "command": "/home/root/edge_alert.sh",
         "addpay": false,
         "append": "",
@@ -378,16 +405,16 @@
         "y": 400,
         "wires": [
             [
-                "af5f1ee9.4fb32"
+                "3672f362.86af5c"
             ],
             [],
             []
         ]
     },
     {
-        "id": "af5f1ee9.4fb32",
+        "id": "3672f362.86af5c",
         "type": "debug",
-        "z": "2644c6a5.5233ba",
+        "z": "9434d0a7.82ba38",
         "name": "",
         "active": true,
         "tosidebar": true,
@@ -399,9 +426,9 @@
         "wires": []
     },
     {
-        "id": "3e8c4ba0.ade5a4",
+        "id": "81b24302.64f4f",
         "type": "comment",
-        "z": "7d3e29cc.af3348",
+        "z": "14c6537a.d4bca5",
         "name": "Receive Model Coefficients from Watson Studio Analytics",
         "info": "MODEL_INTERCEPT\nMODEL_TEMP_COEF\nMODEL_HUM_COEF ",
         "x": 270,
@@ -409,9 +436,9 @@
         "wires": []
     },
     {
-        "id": "b53c2325.5c949",
+        "id": "9ded14a9.976d28",
         "type": "function",
-        "z": "2644c6a5.5233ba",
+        "z": "9434d0a7.82ba38",
         "name": "Prediction - Apply Model",
         "func": "//var EdgeModel = global.get(\"EdgeModel\") || null;\n\nif( typeof( msg.EdgeModel ) === 'undefined') {\n    return null;\n}\nif( msg.EdgeModel === null) {\n    return null;\n}\n\nvar EdgeModel = msg.EdgeModel ;\nvar CurTemp = msg.payload.temperature;\nvar CurHum  = msg.payload.humidity ;\n\n// apply logit formula C + w1*h + w2*t\n//  float regression = MODEL_INTERCEPT + MODEL_HUM_COEF * h + MODEL_TEMP_COEF * t;\nvar regression = parseFloat( EdgeModel.MODEL_INTERCEPT + \n                             EdgeModel.MODEL_HUM_COEF * CurHum +\n                             EdgeModel.MODEL_TEMP_COEF * CurTemp );\n                             \n// sigmoid logistic function on logit result\nvar Prediction =  parseFloat( 1 / ( 1 + Math.exp(0.0 - regression)));\nmsg.Prediction = Prediction ;\n\nvar SendAlert = false\nif( Prediction >= 0.5 ) {\n    SendAlert = true ;\n} else {\n    SendAlert = false \n}\nmsg.payload = SendAlert;\n\n\n// C function\n// # include math.h\n//float applyModel(float h, float t) {\n  // apply logit formula C + w1*h + w2*t\n//  float regression = MODEL_INTERCEPT + MODEL_HUM_COEF * h + MODEL_TEMP_COEF * t;\n  // return sigmoid logistic function on logit result\n//  return  1/(1 + exp(0.0 - (double)regression));\n//}\n\n\nreturn msg;",
         "outputs": 1,
@@ -420,15 +447,15 @@
         "y": 280,
         "wires": [
             [
-                "4fd8fd8e.fc096c",
-                "a8d5ae93.774f"
+                "9f37903f.a80d5",
+                "5862d8e6.721768"
             ]
         ]
     },
     {
-        "id": "4fd8fd8e.fc096c",
+        "id": "9f37903f.a80d5",
         "type": "debug",
-        "z": "2644c6a5.5233ba",
+        "z": "9434d0a7.82ba38",
         "name": "",
         "active": true,
         "tosidebar": true,
@@ -440,9 +467,9 @@
         "wires": []
     },
     {
-        "id": "b2671f3e.bd145",
+        "id": "25129bb4.0b13f4",
         "type": "change",
-        "z": "2644c6a5.5233ba",
+        "z": "9434d0a7.82ba38",
         "name": "Get Edge Model",
         "rules": [
             {
@@ -462,15 +489,15 @@
         "y": 280,
         "wires": [
             [
-                "b53c2325.5c949",
-                "dec5f18c.647cd8"
+                "9ded14a9.976d28",
+                "66d0a538.abf434"
             ]
         ]
     },
     {
-        "id": "dec5f18c.647cd8",
+        "id": "66d0a538.abf434",
         "type": "debug",
-        "z": "2644c6a5.5233ba",
+        "z": "9434d0a7.82ba38",
         "name": "",
         "active": true,
         "tosidebar": true,
@@ -483,9 +510,9 @@
         "wires": []
     },
     {
-        "id": "a8d5ae93.774f",
+        "id": "5862d8e6.721768",
         "type": "switch",
-        "z": "2644c6a5.5233ba",
+        "z": "9434d0a7.82ba38",
         "name": "Show Alert Message",
         "property": "payload",
         "propertyType": "msg",
@@ -501,14 +528,14 @@
         "y": 400,
         "wires": [
             [
-                "fc791bae.8d59e"
+                "be081b32.848c5"
             ]
         ]
     },
     {
-        "id": "bef8fbc3.4950f8",
+        "id": "86ba583a.d26b6",
         "type": "comment",
-        "z": "2644c6a5.5233ba",
+        "z": "9434d0a7.82ba38",
         "name": "Make a Predication based on Trained Model",
         "info": "",
         "x": 510,
@@ -516,9 +543,9 @@
         "wires": []
     },
     {
-        "id": "d1bd5465.c23838",
+        "id": "9f23180b.3cd668",
         "type": "comment",
-        "z": "2644c6a5.5233ba",
+        "z": "9434d0a7.82ba38",
         "name": "Display Image on STM32MP1 Screen",
         "info": "",
         "x": 490,
@@ -526,22 +553,40 @@
         "wires": []
     },
     {
-        "id": "7574183d.f7971",
+        "id": "7c4a3bc.1827bc4",
         "type": "comment",
         "z": "39b3a8ed.9d337",
         "name": "Enter a unique identifier: eg. stm32mp1-xyz",
         "info": "",
-        "x": 650,
-        "y": 160,
+        "x": 660,
+        "y": 120,
         "wires": []
     },
     {
-        "id": "9946b4c5.8ae9e8",
+        "id": "b5723221.f7d3d8",
         "type": "wiotp out",
-        "z": "39b3a8ed.9d337",
+        "z": "9434d0a7.82ba38",
+        "authType": "d",
+        "qs": "false",
+        "qsDeviceId": "",
+        "deviceKey": "7ff6a86d.43b918",
+        "deviceType": "",
+        "deviceId": "",
+        "event": "event",
+        "format": "json",
+        "qos": "",
+        "name": "",
+        "x": 670,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "7e63482.46896b8",
+        "type": "wiotp out",
+        "z": "9434d0a7.82ba38",
         "authType": "d",
         "qs": "true",
-        "qsDeviceId": "stm32mp1-xyx",
+        "qsDeviceId": "stm32mp1-xyz",
         "deviceKey": "",
         "deviceType": "",
         "deviceId": "",
@@ -549,8 +594,1146 @@
         "format": "json",
         "qos": "",
         "name": "Quickstart",
-        "x": 540,
+        "x": 690,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "61ed1b4a.06b93c",
+        "type": "comment",
+        "z": "32622e38.992282",
+        "name": "Read IKS0A2 Sensor Data using Node-RED file nodes",
+        "info": "",
+        "x": 300,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "c6a4292d.2a067",
+        "type": "catch",
+        "z": "32622e38.992282",
+        "name": "",
+        "scope": [
+            "89d7c5e7.88e7f8",
+            "cdc8555f.8ae668",
+            "2810d922.18a87e",
+            "ddeecced.5ee11",
+            "fe59911d.4445b",
+            "485c176b.52ff28",
+            "1a18097d.870f6f",
+            "be390251.d824f",
+            "4a03ffaf.c67a1",
+            "4896b883.40bfc",
+            "554ded82.0b459c",
+            "2819da73.70cfbe",
+            "74724214.8a34f4",
+            "3e64168f.703f22",
+            "ed31f0f0.3a1168",
+            "5773fa9c.8bf6ac",
+            "d3c297cc.f0bc28",
+            "1457664c.2b0f2a"
+        ],
+        "uncaught": false,
+        "x": 140,
+        "y": 1340,
+        "wires": [
+            [
+                "837f05bf.b14908"
+            ]
+        ]
+    },
+    {
+        "id": "837f05bf.b14908",
+        "type": "debug",
+        "z": "32622e38.992282",
+        "name": "Error reading IKS01A2 data",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "x": 360,
+        "y": 1340,
+        "wires": []
+    },
+    {
+        "id": "cdc8555f.8ae668",
+        "type": "file in",
+        "z": "32622e38.992282",
+        "name": "",
+        "filename": "/sys/bus/iio/devices/iio:device3/in_accel_x_raw",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "x": 380,
+        "y": 340,
+        "wires": [
+            [
+                "45af0c6c.e274d4"
+            ]
+        ]
+    },
+    {
+        "id": "45af0c6c.e274d4",
+        "type": "change",
+        "z": "32622e38.992282",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "accel_x_raw",
+                "pt": "flow",
+                "to": "$number($trim(payload))",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 760,
+        "y": 340,
+        "wires": [
+            [
+                "2819da73.70cfbe"
+            ]
+        ]
+    },
+    {
+        "id": "2810d922.18a87e",
+        "type": "file in",
+        "z": "32622e38.992282",
+        "name": "",
+        "filename": "/sys/bus/iio/devices/iio:device2/in_temp_raw",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "x": 370,
+        "y": 140,
+        "wires": [
+            [
+                "17598b9f.52bf24"
+            ]
+        ]
+    },
+    {
+        "id": "17598b9f.52bf24",
+        "type": "change",
+        "z": "32622e38.992282",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "temp_raw",
+                "pt": "flow",
+                "to": "$number($trim(payload))",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 750,
+        "y": 140,
+        "wires": [
+            [
+                "ddeecced.5ee11"
+            ]
+        ]
+    },
+    {
+        "id": "ddeecced.5ee11",
+        "type": "file in",
+        "z": "32622e38.992282",
+        "name": "",
+        "filename": "/sys/bus/iio/devices/iio:device2/in_temp_scale",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "x": 380,
+        "y": 180,
+        "wires": [
+            [
+                "ba71bf7c.211398"
+            ]
+        ]
+    },
+    {
+        "id": "ba71bf7c.211398",
+        "type": "change",
+        "z": "32622e38.992282",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "temp_scale",
+                "pt": "flow",
+                "to": "$number($trim(payload))",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 760,
+        "y": 180,
+        "wires": [
+            [
+                "fe59911d.4445b"
+            ]
+        ]
+    },
+    {
+        "id": "fe59911d.4445b",
+        "type": "file in",
+        "z": "32622e38.992282",
+        "name": "",
+        "filename": "/sys/bus/iio/devices/iio:device2/in_humidityrelative_offset",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "x": 410,
         "y": 220,
+        "wires": [
+            [
+                "e21c8de6.0ce3a8"
+            ]
+        ]
+    },
+    {
+        "id": "e21c8de6.0ce3a8",
+        "type": "change",
+        "z": "32622e38.992282",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "humidityrelative_offset",
+                "pt": "flow",
+                "to": "$number($trim(payload))",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 790,
+        "y": 220,
+        "wires": [
+            [
+                "485c176b.52ff28"
+            ]
+        ]
+    },
+    {
+        "id": "485c176b.52ff28",
+        "type": "file in",
+        "z": "32622e38.992282",
+        "name": "",
+        "filename": "/sys/bus/iio/devices/iio:device2/in_humidityrelative_raw",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "x": 410,
+        "y": 260,
+        "wires": [
+            [
+                "6a62cc8f.0e8bdc"
+            ]
+        ]
+    },
+    {
+        "id": "6a62cc8f.0e8bdc",
+        "type": "change",
+        "z": "32622e38.992282",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "humidityrelative_raw",
+                "pt": "flow",
+                "to": "$number($trim(payload))",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 780,
+        "y": 260,
+        "wires": [
+            [
+                "1a18097d.870f6f"
+            ]
+        ]
+    },
+    {
+        "id": "1a18097d.870f6f",
+        "type": "file in",
+        "z": "32622e38.992282",
+        "name": "",
+        "filename": "/sys/bus/iio/devices/iio:device2/in_humidityrelative_scale",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "x": 410,
+        "y": 300,
+        "wires": [
+            [
+                "fe1ceb5b.aaec4"
+            ]
+        ]
+    },
+    {
+        "id": "fe1ceb5b.aaec4",
+        "type": "change",
+        "z": "32622e38.992282",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "humidityrelative_scale",
+                "pt": "flow",
+                "to": "$number($trim(payload))",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 790,
+        "y": 300,
+        "wires": [
+            [
+                "cdc8555f.8ae668"
+            ]
+        ]
+    },
+    {
+        "id": "be390251.d824f",
+        "type": "file in",
+        "z": "32622e38.992282",
+        "name": "",
+        "filename": "/sys/bus/iio/devices/iio:device3/in_accel_y_raw",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "x": 380,
+        "y": 420,
+        "wires": [
+            [
+                "28df720c.9e4e4e"
+            ]
+        ]
+    },
+    {
+        "id": "28df720c.9e4e4e",
+        "type": "change",
+        "z": "32622e38.992282",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "accel_y_raw",
+                "pt": "flow",
+                "to": "$number($trim(payload))",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 760,
+        "y": 420,
+        "wires": [
+            [
+                "4a03ffaf.c67a1"
+            ]
+        ]
+    },
+    {
+        "id": "4a03ffaf.c67a1",
+        "type": "file in",
+        "z": "32622e38.992282",
+        "name": "",
+        "filename": "/sys/bus/iio/devices/iio:device3/in_accel_y_scale",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "x": 390,
+        "y": 460,
+        "wires": [
+            [
+                "2749bb78.24943c"
+            ]
+        ]
+    },
+    {
+        "id": "2749bb78.24943c",
+        "type": "change",
+        "z": "32622e38.992282",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "accel_y_scale",
+                "pt": "flow",
+                "to": "$number($trim(payload))",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 760,
+        "y": 460,
+        "wires": [
+            [
+                "4896b883.40bfc"
+            ]
+        ]
+    },
+    {
+        "id": "4896b883.40bfc",
+        "type": "file in",
+        "z": "32622e38.992282",
+        "name": "",
+        "filename": "/sys/bus/iio/devices/iio:device3/in_accel_z_raw",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "x": 380,
+        "y": 500,
+        "wires": [
+            [
+                "5ebc3a2a.cb2f24"
+            ]
+        ]
+    },
+    {
+        "id": "5ebc3a2a.cb2f24",
+        "type": "change",
+        "z": "32622e38.992282",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "accel_z_raw",
+                "pt": "flow",
+                "to": "$number($trim(payload))",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 760,
+        "y": 500,
+        "wires": [
+            [
+                "554ded82.0b459c"
+            ]
+        ]
+    },
+    {
+        "id": "554ded82.0b459c",
+        "type": "file in",
+        "z": "32622e38.992282",
+        "name": "",
+        "filename": "/sys/bus/iio/devices/iio:device3/in_accel_z_scale",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "x": 390,
+        "y": 540,
+        "wires": [
+            [
+                "26f64f85.a2981"
+            ]
+        ]
+    },
+    {
+        "id": "26f64f85.a2981",
+        "type": "change",
+        "z": "32622e38.992282",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "accel_z_scale",
+                "pt": "flow",
+                "to": "$number($trim(payload))",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 760,
+        "y": 540,
+        "wires": [
+            [
+                "74724214.8a34f4"
+            ]
+        ]
+    },
+    {
+        "id": "2819da73.70cfbe",
+        "type": "file in",
+        "z": "32622e38.992282",
+        "name": "",
+        "filename": "/sys/bus/iio/devices/iio:device3/in_accel_x_scale",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "x": 390,
+        "y": 380,
+        "wires": [
+            [
+                "b2e9c0ef.20014"
+            ]
+        ]
+    },
+    {
+        "id": "b2e9c0ef.20014",
+        "type": "change",
+        "z": "32622e38.992282",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "accel_x_scale",
+                "pt": "flow",
+                "to": "$number($trim(payload))",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 760,
+        "y": 380,
+        "wires": [
+            [
+                "be390251.d824f"
+            ]
+        ]
+    },
+    {
+        "id": "74724214.8a34f4",
+        "type": "file in",
+        "z": "32622e38.992282",
+        "name": "",
+        "filename": "/sys/bus/iio/devices/iio:device4/in_anglvel_x_raw",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "x": 390,
+        "y": 580,
+        "wires": [
+            [
+                "b68581b2.e36d88"
+            ]
+        ]
+    },
+    {
+        "id": "b68581b2.e36d88",
+        "type": "change",
+        "z": "32622e38.992282",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "anglvel_x_raw",
+                "pt": "flow",
+                "to": "$number($trim(payload))",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 760,
+        "y": 580,
+        "wires": [
+            [
+                "1457664c.2b0f2a"
+            ]
+        ]
+    },
+    {
+        "id": "3e64168f.703f22",
+        "type": "file in",
+        "z": "32622e38.992282",
+        "name": "",
+        "filename": "/sys/bus/iio/devices/iio:device4/in_anglvel_y_raw",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "x": 390,
+        "y": 660,
+        "wires": [
+            [
+                "3ffc0a4b.71cebe"
+            ]
+        ]
+    },
+    {
+        "id": "3ffc0a4b.71cebe",
+        "type": "change",
+        "z": "32622e38.992282",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "anglvel_y_raw",
+                "pt": "flow",
+                "to": "$number($trim(payload))",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 760,
+        "y": 660,
+        "wires": [
+            [
+                "ed31f0f0.3a1168"
+            ]
+        ]
+    },
+    {
+        "id": "ed31f0f0.3a1168",
+        "type": "file in",
+        "z": "32622e38.992282",
+        "name": "",
+        "filename": "/sys/bus/iio/devices/iio:device4/in_anglvel_y_scale",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "x": 390,
+        "y": 700,
+        "wires": [
+            [
+                "ad6bff45.0ffad8"
+            ]
+        ]
+    },
+    {
+        "id": "ad6bff45.0ffad8",
+        "type": "change",
+        "z": "32622e38.992282",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "anglvel_y_scale",
+                "pt": "flow",
+                "to": "$number($trim(payload))",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 770,
+        "y": 700,
+        "wires": [
+            [
+                "5773fa9c.8bf6ac"
+            ]
+        ]
+    },
+    {
+        "id": "5773fa9c.8bf6ac",
+        "type": "file in",
+        "z": "32622e38.992282",
+        "name": "",
+        "filename": "/sys/bus/iio/devices/iio:device4/in_anglvel_z_raw",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "x": 390,
+        "y": 740,
+        "wires": [
+            [
+                "b9742a94.504c28"
+            ]
+        ]
+    },
+    {
+        "id": "b9742a94.504c28",
+        "type": "change",
+        "z": "32622e38.992282",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "anglvel_z_raw",
+                "pt": "flow",
+                "to": "$number($trim(payload))",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 760,
+        "y": 740,
+        "wires": [
+            [
+                "d3c297cc.f0bc28"
+            ]
+        ]
+    },
+    {
+        "id": "d3c297cc.f0bc28",
+        "type": "file in",
+        "z": "32622e38.992282",
+        "name": "",
+        "filename": "/sys/bus/iio/devices/iio:device4/in_anglvel_z_scale",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "x": 390,
+        "y": 780,
+        "wires": [
+            [
+                "3490d2ba.ff96b6"
+            ]
+        ]
+    },
+    {
+        "id": "3490d2ba.ff96b6",
+        "type": "change",
+        "z": "32622e38.992282",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "anglvel_z_scale",
+                "pt": "flow",
+                "to": "$number($trim(payload))",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 770,
+        "y": 780,
+        "wires": [
+            [
+                "515257f3.0f575"
+            ]
+        ]
+    },
+    {
+        "id": "1457664c.2b0f2a",
+        "type": "file in",
+        "z": "32622e38.992282",
+        "name": "",
+        "filename": "/sys/bus/iio/devices/iio:device4/in_anglvel_x_scale",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "x": 390,
+        "y": 620,
+        "wires": [
+            [
+                "3c6f6ec4.94e03a"
+            ]
+        ]
+    },
+    {
+        "id": "3c6f6ec4.94e03a",
+        "type": "change",
+        "z": "32622e38.992282",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "anglvel_x_scale",
+                "pt": "flow",
+                "to": "$number($trim(payload))",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 770,
+        "y": 620,
+        "wires": [
+            [
+                "3e64168f.703f22"
+            ]
+        ]
+    },
+    {
+        "id": "515257f3.0f575",
+        "type": "function",
+        "z": "32622e38.992282",
+        "name": "Calculate sensor data",
+        "func": "// Calculate temperature\n//  temperature = (offset + raw) * scale\nvar temperature = ( flow.get( \"temp_offset\" ) + flow.get( \"temp_raw\" ) ) * flow.get( \"temp_scale\") ;\ntemperature = temperature.toFixed(2) ; // round to 2 decimal places\n\n// Calculate humidity\n//  humididty = (offset + raw ) * scale\nvar humidity = ( flow.get( \"humidityrelative_offset\" ) + flow.get( \"humidityrelative_raw\" ) ) * flow.get( \"humidityrelative_scale\" ) ;\nhumidity = humidity.toFixed(2) ; // round to 2 decimal places\n\n// Calculate Accelerometer\n//  x = int(raw * scale * 256.0 / 9.81)\n//  y = int(raw * scale * 256.0 / 9.81)\n//  z = int(raw * scale * 256.0 / 9.81)\nvar x = parseInt( flow.get( \"accel_x_raw\" ) * flow.get( \"accel_x_scale\" ) * 256.0 / 9.81 ) ;\nvar y = parseInt( flow.get( \"accel_y_raw\" ) * flow.get( \"accel_y_scale\" ) * 256.0 / 9.81 ) ;\nvar z = parseInt( flow.get( \"accel_z_raw\" ) * flow.get( \"accel_z_scale\" ) * 256.0 / 9.81 ) ;\n\n// Calculate Gyroscope\n//  gx = int(raw * scale * 256.0 / 9.81)\n//  gy = int(raw * scale * 256.0 / 9.81)\n//  gz = int(raw * scale * 256.0 / 9.81)\nvar gx = parseInt( flow.get( \"anglvel_x_raw\" ) * flow.get( \"anglvel_x_scale\" ) * 256.0 / 9.81 ) ;\nvar gy = parseInt( flow.get( \"anglvel_y_raw\" ) * flow.get( \"anglvel_y_scale\" ) * 256.0 / 9.81 ) ;\nvar gz = parseInt( flow.get( \"anglvel_z_raw\" ) * flow.get( \"anglvel_z_scale\" ) * 256.0 / 9.81 ) ;\n\n// Build one large json object to send to IBM Cloud\n//print('{\"temperature\":%.2f,\"humidity\":%.2f,\"acc_x\":%d,\"acc_y\":%d,\"acc_z\":%d,\"gyr_x\":%d,\"gyr_y\":%d,\"gyr_z\":%d}' % (temperature, humidity, x, y, z, gx, gy, gz))\n\nmsg.payload  = { 'temperature':temperature, 'humidity': humidity, 'acc_x':x, 'acc_y':y, 'acc_z':z, 'gyr_x':gx,'gyr_y':gy,'gyr_z':gz }\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 300,
+        "y": 860,
+        "wires": [
+            [
+                "504a4085.758f28",
+                "84ea7042.e25998"
+            ]
+        ]
+    },
+    {
+        "id": "89d7c5e7.88e7f8",
+        "type": "file in",
+        "z": "32622e38.992282",
+        "name": "",
+        "filename": "/sys/bus/iio/devices/iio:device2/in_temp_offset",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "x": 380,
+        "y": 100,
+        "wires": [
+            [
+                "3386116a.a639fe"
+            ]
+        ]
+    },
+    {
+        "id": "daee09eb.7b8c1",
+        "type": "inject",
+        "z": "32622e38.992282",
+        "name": "",
+        "topic": "",
+        "payload": "true",
+        "payloadType": "bool",
+        "repeat": "5",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 100,
+        "y": 100,
+        "wires": [
+            [
+                "89d7c5e7.88e7f8"
+            ]
+        ]
+    },
+    {
+        "id": "3386116a.a639fe",
+        "type": "change",
+        "z": "32622e38.992282",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "temp_offset",
+                "pt": "flow",
+                "to": "$number($trim(payload))",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 760,
+        "y": 100,
+        "wires": [
+            [
+                "2810d922.18a87e"
+            ]
+        ]
+    },
+    {
+        "id": "504a4085.758f28",
+        "type": "debug",
+        "z": "32622e38.992282",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "x": 610,
+        "y": 880,
+        "wires": []
+    },
+    {
+        "id": "f27abe52.e91cd8",
+        "type": "inject",
+        "z": "32622e38.992282",
+        "name": "Test Alert image",
+        "topic": "",
+        "payload": "true",
+        "payloadType": "bool",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 320,
+        "y": 1220,
+        "wires": [
+            [
+                "f9b854d.99a97a8"
+            ]
+        ]
+    },
+    {
+        "id": "f9b854d.99a97a8",
+        "type": "exec",
+        "z": "32622e38.992282",
+        "command": "/home/root/edge_alert.sh",
+        "addpay": false,
+        "append": "",
+        "useSpawn": "false",
+        "timer": "",
+        "oldrc": false,
+        "name": "",
+        "x": 570,
+        "y": 1180,
+        "wires": [
+            [
+                "1813adbb.21b8aa"
+            ],
+            [],
+            []
+        ]
+    },
+    {
+        "id": "1813adbb.21b8aa",
+        "type": "debug",
+        "z": "32622e38.992282",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "x": 830,
+        "y": 1180,
+        "wires": []
+    },
+    {
+        "id": "7030f3a8.9787f4",
+        "type": "function",
+        "z": "32622e38.992282",
+        "name": "Prediction - Apply Model",
+        "func": "//var EdgeModel = global.get(\"EdgeModel\") || null;\n\nif( typeof( msg.EdgeModel ) === 'undefined') {\n    return null;\n}\nif( msg.EdgeModel === null) {\n    return null;\n}\n\nvar EdgeModel = msg.EdgeModel ;\nvar CurTemp = msg.payload.temperature;\nvar CurHum  = msg.payload.humidity ;\n\n// apply logit formula C + w1*h + w2*t\n//  float regression = MODEL_INTERCEPT + MODEL_HUM_COEF * h + MODEL_TEMP_COEF * t;\nvar regression = parseFloat( EdgeModel.MODEL_INTERCEPT + \n                             EdgeModel.MODEL_HUM_COEF * CurHum +\n                             EdgeModel.MODEL_TEMP_COEF * CurTemp );\n                             \n// sigmoid logistic function on logit result\nvar Prediction =  parseFloat( 1 / ( 1 + Math.exp(0.0 - regression)));\nmsg.Prediction = Prediction ;\n\nvar SendAlert = false\nif( Prediction >= 0.5 ) {\n    SendAlert = true ;\n} else {\n    SendAlert = false \n}\nmsg.payload = SendAlert;\n\n\n// C function\n// # include math.h\n//float applyModel(float h, float t) {\n  // apply logit formula C + w1*h + w2*t\n//  float regression = MODEL_INTERCEPT + MODEL_HUM_COEF * h + MODEL_TEMP_COEF * t;\n  // return sigmoid logistic function on logit result\n//  return  1/(1 + exp(0.0 - (double)regression));\n//}\n\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 570,
+        "y": 1060,
+        "wires": [
+            [
+                "b72ee9b2.a8d908",
+                "46fce1f6.c9cc58"
+            ]
+        ]
+    },
+    {
+        "id": "b72ee9b2.a8d908",
+        "type": "debug",
+        "z": "32622e38.992282",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "x": 830,
+        "y": 1060,
+        "wires": []
+    },
+    {
+        "id": "f33de80f.13bed",
+        "type": "change",
+        "z": "32622e38.992282",
+        "name": "Get Edge Model",
+        "rules": [
+            {
+                "t": "set",
+                "p": "EdgeModel",
+                "pt": "msg",
+                "to": "EdgeModel",
+                "tot": "global"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 280,
+        "y": 1060,
+        "wires": [
+            [
+                "7030f3a8.9787f4",
+                "5298f4dc.97a3cc"
+            ]
+        ]
+    },
+    {
+        "id": "5298f4dc.97a3cc",
+        "type": "debug",
+        "z": "32622e38.992282",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "EdgeModel",
+        "targetType": "msg",
+        "x": 540,
+        "y": 1020,
+        "wires": []
+    },
+    {
+        "id": "46fce1f6.c9cc58",
+        "type": "switch",
+        "z": "32622e38.992282",
+        "name": "Show Alert Message",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "true"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 300,
+        "y": 1180,
+        "wires": [
+            [
+                "f9b854d.99a97a8"
+            ]
+        ]
+    },
+    {
+        "id": "63b5de48.d2a02",
+        "type": "comment",
+        "z": "32622e38.992282",
+        "name": "Make a Predication based on Trained Model",
+        "info": "",
+        "x": 630,
+        "y": 980,
+        "wires": []
+    },
+    {
+        "id": "1894618d.d45db6",
+        "type": "comment",
+        "z": "32622e38.992282",
+        "name": "Display Image on STM32MP1 Screen",
+        "info": "",
+        "x": 610,
+        "y": 1140,
+        "wires": []
+    },
+    {
+        "id": "4f435ecf.8e77c",
+        "type": "comment",
+        "z": "32622e38.992282",
+        "name": "Catch IKS01A2 sensor value read failures",
+        "info": "",
+        "x": 240,
+        "y": 1300,
+        "wires": []
+    },
+    {
+        "id": "97ce37a1.943c18",
+        "type": "wiotp out",
+        "z": "32622e38.992282",
+        "authType": "d",
+        "qs": "true",
+        "qsDeviceId": "stm32mp1-xyz",
+        "deviceKey": "",
+        "deviceType": "",
+        "deviceId": "",
+        "event": "event",
+        "format": "json",
+        "qos": "",
+        "name": "Quickstart",
+        "x": 610,
+        "y": 840,
+        "wires": []
+    },
+    {
+        "id": "84ea7042.e25998",
+        "type": "wiotp out",
+        "z": "32622e38.992282",
+        "authType": "d",
+        "qs": "false",
+        "qsDeviceId": "",
+        "deviceKey": "7ff6a86d.43b918",
+        "deviceType": "",
+        "deviceId": "",
+        "event": "event",
+        "format": "json",
+        "qos": "",
+        "name": "abc123",
+        "x": 590,
+        "y": 920,
         "wires": []
     }
 ]
