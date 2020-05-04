@@ -1,5 +1,5 @@
 *Quick links :*
-**Part 3** - [Home](/README.md) - [Watson Studio](STUDIO.md) - [Training Data](TRAINING.md) - [**Notebooks**](JUPYTER.md) - [STM32MP1 model](MODEL.md) - [Summary](SUMMARY.md)
+**Part 3** - [Home](/README.md) - [Part 3](README.md) - [Watson Studio](STUDIO.md) - [Training Data](TRAINING.md) - [**Notebooks**](JUPYTER.md) - [STM32MP1 model](MODEL.md) - [Summary](SUMMARY.md)
 ***
 
 # Run a Jupyter Notebook in Watson Studio
@@ -239,5 +239,5 @@ There is a sample solution for this part provided in the [notebooks](notebooks) 
 Alternatively, you can select to import from URL and set the URL to : [https://raw.githubusercontent.com/johnwalicki/STM32MP1-Edge-WatsonIoT-Workshop/master/part3/notebooks/IoT%20Sensor%20Analytics.ipynb](https://raw.githubusercontent.com/johnwalicki/STM32MP1-Edge-WatsonIoT-Workshop/master/part3/notebooks/IoT%20Sensor%20Analytics.ipynb)
 
 ***
-**Part 3** - [Watson Studio](STUDIO.md) - [Training Data](TRAINING.md) - [**Notebooks**](JUPYTER.md) - [STM32MP1 model](MODEL.md) - [Summary](SUMMARY.md)
+**Part 3** - [Part 3](README.md) - [Watson Studio](STUDIO.md) - [Training Data](TRAINING.md) - [**Notebooks**](JUPYTER.md) - [STM32MP1 model](MODEL.md) - [Summary](SUMMARY.md)
 ***

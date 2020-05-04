@@ -1,5 +1,5 @@
 *Quick links :*
-**Part 3** - [Home](/README.md) - [Watson Studio](STUDIO.md) - [**Training Data**](TRAINING.md) - [Notebooks](JUPYTER.md) - [STM32MP1 model](MODEL.md) - [Summary](SUMMARY.md)
+**Part 3** - [Home](/README.md) - [Part 3](README.md) - [Watson Studio](STUDIO.md) - [**Training Data**](TRAINING.md) - [Notebooks](JUPYTER.md) - [STM32MP1 model](MODEL.md) - [Summary](SUMMARY.md)
 ***
 
 ## Lab Objectives
@@ -93,5 +93,5 @@ You can now start creating the training data again - the database is automatical
 
 Once you have your training data recorded you can move to the [next section](JUPYTER.md)
 ***
-**Part 3** - [Watson Studio](STUDIO.md) - [**Training Data**](TRAINING.md) - [Notebooks](JUPYTER.md) - [STM32MP1 model](MODEL.md) - [Summary](SUMMARY.md)
+**Part 3** - [Part 3](README.md) - [Watson Studio](STUDIO.md) - [**Training Data**](TRAINING.md) - [Notebooks](JUPYTER.md) - [STM32MP1 model](MODEL.md) - [Summary](SUMMARY.md)
 ***

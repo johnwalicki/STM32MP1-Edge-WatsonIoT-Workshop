@@ -1,5 +1,5 @@
 *Quick links :*
-**Part 3** - [Home](/README.md) - [Watson Studio](STUDIO.md) - [Training Data](TRAINING.md) - [Notebooks](JUPYTER.md) - [**STM32MP1 model**](MODEL.md) - [Summary](SUMMARY.md)
+**Part 3** - [Home](/README.md) - [Part 3](README.md) - [Watson Studio](STUDIO.md) - [Training Data](TRAINING.md) - [Notebooks](JUPYTER.md) - [**STM32MP1 model**](MODEL.md) - [Summary](SUMMARY.md)
 ***
 
 # Run the model on the STM32MP1 device
@@ -51,5 +51,5 @@ Given the two functions we can create an implementation in Node-RED that can be 
 ![nodered edge prediction model](screenshots/nr-edge-prediction.png)
 
 ***
-**Part 3** - [Watson Studio](STUDIO.md) - [Training Data](TRAINING.md) - [Notebooks](JUPYTER.md) - [**STM32MP1 model**](MODEL.md) - [Summary](SUMMARY.md)
+**Part 3** - [Part 3](README.md) - [Watson Studio](STUDIO.md) - [Training Data](TRAINING.md) - [Notebooks](JUPYTER.md) - [**STM32MP1 model**](MODEL.md) - [Summary](SUMMARY.md)
 ***
