@@ -10,7 +10,7 @@ The [Node.JS](https://nodejs.org/) runtime is easy to install on both devices (l
 
 [Node-RED](https://nodered.org) applications, or flows, are created using a browser based editor served from the Node-RED runtime.  There is a palette of nodes installed out of the box, but there are a wealth of additional [nodes](https://flows.nodered.org/?type=node&num_pages=1) available to be installed to add additional capabilities to Node-RED.
 
-Node-RED flows are created by dragging nodes from the pallet then connecting them in the editor.
+Node-RED flows are created by dragging nodes from the palette then connecting them in the Node-RED Editor.
 
 ![Flow editor](../screenshots/NRD-Edge-Random.png)
 
@@ -18,7 +18,7 @@ Node-RED flows are created by dragging nodes from the pallet then connecting the
 
 Open a browser on your laptop and create a new tab.  Visit the Node-RED web server running on your STM32MP1 edge device and port :1880
 ```
-http:\\10.37.254.nnn:1880
+http://10.37.254.nnn:1880
 ```
 
 The Node-RED runtime and editor are running on the STM32MP1 Linux image.
