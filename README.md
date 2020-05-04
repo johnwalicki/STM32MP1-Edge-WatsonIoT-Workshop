@@ -166,5 +166,5 @@ This workshop and code examples are licensed under the Apache Software License, 
 [Apache Software License (ASL) FAQ](http://www.apache.org/foundation/license-faq.html#WhatDoesItMEAN)
 
 *Quick links :*
-[Home](/README.md) - [Part 1](../part1/README.md) - [Part 2](../part2/README.md) - [Part 3](../part3/README.md)
+[Home](/README.md) - [Part 1](../part1/UNBOX.md) - [Part 2](../part2/CREATEIOTP.md) - [Part 3](../part3/STUDIO.md)
 ***
